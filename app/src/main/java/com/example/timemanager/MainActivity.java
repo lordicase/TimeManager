@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
     public static RecyclerView recycleView;
-    String project[], time[];
+    String project[], time[], color[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
         project = getResources().getStringArray(R.array.Project);
         time = getResources().getStringArray(R.array.Time);
+        color = getResources().getStringArray(R.array.Color);
 
-        Project_Adapter projectAdapter = new Project_Adapter(this, project,time);
+        Project_Adapter projectAdapter = new Project_Adapter(this, project, time, color);
         recycleView.setAdapter(projectAdapter);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
     }
