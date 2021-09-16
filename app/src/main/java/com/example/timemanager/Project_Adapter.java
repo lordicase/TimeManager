@@ -1,6 +1,7 @@
 package com.example.timemanager;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class Project_Adapter extends RecyclerView.Adapter<Project_Adapter.ViewHolder> {
@@ -39,7 +42,7 @@ public class Project_Adapter extends RecyclerView.Adapter<Project_Adapter.ViewHo
         holder.time_tv.setText(time[position]);
 
         GradientDrawable drawable = (GradientDrawable)holder.imageView.getBackground();
-        drawable.setStroke(2, Color.parseColor(color[position])); // set stroke width and stroke color
+        drawable.setColor(Color.parseColor(color[position]));
     }
 
     @Override
