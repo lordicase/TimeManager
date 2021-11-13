@@ -1,11 +1,14 @@
 package com.example.timemanager;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,8 +49,11 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Project currentproject = getItem(position);
-        holder.project_tv.setText(currentproject.getTitle());
-        holder.time_tv.setText(String.valueOf(currentproject.getTime()));
+
+        holder.projectTextView.setText(currentproject.getTitle());
+
+        holder.timeTextView.setText(String.valueOf(currentproject.getTime()/60)+" : "+(currentproject.getTime()%60));
+        holder.progressBar.getProgressDrawable().setColorFilter(Color.parseColor(currentproject.getColor()), PorterDuff.Mode.SRC_IN);
 
         GradientDrawable drawable = (GradientDrawable)holder.imageView.getBackground();
         drawable.setColor(Color.parseColor(currentproject.getColor()));
@@ -57,13 +63,19 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView project_tv, time_tv;
+        TextView projectTextView, timeTextView;
         ImageView imageView;
+        ProgressBar progressBar;
+        ImageButton imageButton;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            project_tv = itemView.findViewById(R.id.textView1);
-            time_tv = itemView.findViewById(R.id.textView2);
+            projectTextView = itemView.findViewById(R.id.textView1);
+            timeTextView = itemView.findViewById(R.id.textView2);
             imageView = itemView.findViewById(R.id.imageView);
+            progressBar = itemView.findViewById(R.id.progressBar);
+            imageButton = itemView.findViewById(R.id.imageButton);
+
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
