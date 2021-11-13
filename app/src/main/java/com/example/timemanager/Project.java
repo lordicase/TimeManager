@@ -9,7 +9,7 @@ public class Project {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
-    private int time, time_done;
+    private int time, timeDone;
     private String color;
 
     public Project (String title, int time, String color){
@@ -22,8 +22,8 @@ public class Project {
         this.id = id;
     }
 
-    public void setTime_done(int time_done) {
-        this.time_done = time_done;
+    public void setTimeDone(int timeDone) {
+        this.timeDone = timeDone;
     }
 
     public int getId() {
@@ -38,8 +38,8 @@ public class Project {
         return time;
     }
 
-    public int getTime_done() {
-        return time_done;
+    public int getTimeDone() {
+        return timeDone;
     }
 
     public String getColor() {
