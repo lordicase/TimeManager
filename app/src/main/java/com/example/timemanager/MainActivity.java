@@ -1,9 +1,15 @@
 package com.example.timemanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,8 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ProjectViewModel projectViewModel;
-    public static RecyclerView recycleView;
+    public static ProjectViewModel projectViewModel;
+    private static RecyclerView recycleView;
     String project[], time[], color[];
     FloatingActionButton add_button;
 
@@ -44,13 +50,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        add_button = findViewById(R.id.add_item);
-        add_button.setOnClickListener(new View.OnClickListener() {
+
+        FloatingActionButton buttonAddProject = findViewById(R.id.add_item);
+        buttonAddProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddProjectActivity.class);
-                startActivity(intent);
+                mStartForResult.launch(new Intent(MainActivity.this, AddProjectActivity.class));
             }
         });
     }
+
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        String title = intent.getStringExtra(AddProjectActivity.EXTRA_TITLE);
+                        String color = intent.getStringExtra(AddProjectActivity.EXTRA_COLOR);
+                        int timePerDay = intent.getIntExtra(AddProjectActivity.EXTRA_TIME, 0);
+
+                        Project project = new Project(title,timePerDay,color);
+                        projectViewModel.insert(project);
+
+                        Toast.makeText(MainActivity.this, "Project saved", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
 }
