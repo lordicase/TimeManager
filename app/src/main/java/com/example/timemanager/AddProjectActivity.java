@@ -137,7 +137,7 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
     private void saveProject() {
         String title = editTextProjectTitle.getText().toString();
         String color = String.format("#%06X", (0xFFFFFF & projectColor));
-        int timePerDay = (hourPicker.getValue() * 60 + minutesPicker.getValue());
+        int timePerDay = (hourPicker.getValue() * 3600000 + minutesPicker.getValue()*60000);
 
 
         if (title.trim().isEmpty()) {

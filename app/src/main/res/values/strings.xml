@@ -1,21 +1,4 @@
 <resources>
     <string name="app_name">TimeManager</string>
-    
-    <string-array name="Project">
-        <item>Work</item>
-        <item>Fun</item>
-        <item>Lerning</item>
-    </string-array>
 
-    <string-array name="Time">
-        <item>8:0</item>
-        <item>1:0</item>
-        <item>3:0</item>
-    </string-array>
-
-    <string-array name="Color">
-        <item>#123546</item>
-        <item>#54f32a</item>
-        <item>#aaaf45</item>
-    </string-array>
 </resources>

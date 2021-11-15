@@ -24,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static ProjectViewModel projectViewModel;
     private static RecyclerView recycleView;
-    String project[], time[], color[];
-    FloatingActionButton add_button;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +32,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        project = getResources().getStringArray(R.array.Project);
-        time = getResources().getStringArray(R.array.Time);
-        color = getResources().getStringArray(R.array.Color);
 
         recycleView = (RecyclerView) findViewById(R.id.recyclerview);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
