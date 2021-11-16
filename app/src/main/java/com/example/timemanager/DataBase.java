@@ -41,9 +41,9 @@ public abstract class DataBase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            projectDao.insert(new Project("Work", 480, "#123546"));
-            projectDao.insert(new Project("Fun", 60, "#abcd13"));
-            projectDao.insert(new Project("Lerning",120 , "#123512"));
+            projectDao.insert(new Project("Work", 28800000, "#E91E63"));
+            projectDao.insert(new Project("Fun", 3600000, "#CDDC39"));
+            projectDao.insert(new Project("Lerning",7200000 , "#009688"));
             return null;
         }
     }
