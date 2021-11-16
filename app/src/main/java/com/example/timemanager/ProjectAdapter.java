@@ -1,8 +1,10 @@
 package com.example.timemanager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,6 +115,10 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
                         .getInstance(view.getContext())
                         .enqueue(uploadWorkRequest);
+
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    view.getContext().startForegroundService(new Intent(view.getContext(), CountdownService.class));
+//                }
 
 //                WorkManager.getInstance().cancelAllWorkByTag("worker");
 
