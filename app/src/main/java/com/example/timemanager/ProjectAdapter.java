@@ -1,10 +1,13 @@
 package com.example.timemanager;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.support.v4.os.IResultReceiver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +15,26 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHolder> {
 
-    Countdown countdown = null;
+
     private OnItemClickListener listener;
     int startedPosition = -1;
+    int startedWorker = 0;
+
 
     public ProjectAdapter() {
         super(DIFF_CALLBACK);
@@ -63,62 +71,94 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         Project currentproject = getItem(position);
 
         holder.projectTextView.setText(currentproject.getTitle());
-        if (currentproject.getTime() <= 3600000) {
-            holder.timeTextView.setText(((currentproject.getTimeDone() / 60000)   + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + "/" +
-                    (currentproject.getTime() / 60000)   + " : " + ((currentproject.getTime() % 60000) / 1000)));
-        } else {
-            holder.timeTextView.setText((currentproject.getTimeDone() / 3600000 + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + "/" +
-                    currentproject.getTime() / 3600000 + " : " + ((currentproject.getTime() % 3600000) / 60000)));
-        }
+
 
 
         if (currentproject.getTimeDone() >= currentproject.getTime()) {
             holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
             holder.imageButton.setEnabled(false);
             holder.timeTextView.setText("COMPLETED!");
-            holder.timeTextView.setTextColor(Color.parseColor("#85E615"));
+
+
+        }else {
+            if (currentproject.getTime() <= 3600000) {
+                holder.timeTextView.setText(((currentproject.getTimeDone() / 60000) + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + "/" +
+                        (currentproject.getTime() / 60000) + " : " + ((currentproject.getTime() % 60000) / 1000)));
+            } else {
+                holder.timeTextView.setText((currentproject.getTimeDone() / 3600000 + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + "/" +
+                        currentproject.getTime() / 3600000 + " : " + ((currentproject.getTime() % 3600000) / 60000)));
+            }
+            holder.imageButton.setEnabled(true);
+            if (holder.getAdapterPosition() == startedPosition) {
+                holder.imageButton.setImageResource(R.drawable.ic_round_pause);
+            } else {
+                holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
+            }
         }
+
         holder.progressBar.getProgressDrawable().setColorFilter(Color.parseColor(currentproject.getColor()), PorterDuff.Mode.SRC_IN);
         holder.progressBar.setMax(currentproject.getTime());
         holder.progressBar.setProgress(currentproject.getTimeDone());
 
 
-        if (holder.getAdapterPosition() == startedPosition) {
-            holder.imageButton.setImageResource(R.drawable.ic_round_pause);
-        } else {
-            holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
-        }
 
-        GradientDrawable drawable = (GradientDrawable)holder.imageView.getBackground();
+
+        GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
         drawable.setColor(Color.parseColor(currentproject.getColor()));
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WorkManager.getInstance(view.getContext()).cancelUniqueWork(String.valueOf(startedWorker));
 
-                Data projectData = new Data.Builder()
-                        .putInt("id", currentproject.getId())
-                        .putInt("time", currentproject.getTime())
-                        .putInt("timeDone",currentproject.getTimeDone())
-                        .putString("title", currentproject.getTitle())
-                        .putString("color", currentproject.getColor())
-                        .build();
+                if (holder.getAdapterPosition() == startedPosition) {
+                    startedPosition = -1;
+                    startedWorker++;
+                    holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
+                    notifyItemChanged(holder.getAdapterPosition());
+                } else {
+                    notifyItemChanged(startedPosition);
+                    startedPosition = holder.getAdapterPosition();
+
+                    Toast.makeText(view.getContext(), "Starting " + currentproject.getTitle(), Toast.LENGTH_SHORT).show();
+                    holder.imageButton.setImageResource(R.drawable.ic_round_pause);
+
+                    Data projectData = new Data.Builder()
+                            .putInt("id", currentproject.getId())
+                            .putInt("time", currentproject.getTime())
+                            .putInt("timeDone", currentproject.getTimeDone())
+                            .putString("title", currentproject.getTitle())
+                            .putString("color", currentproject.getColor())
+                            .build();
 
 
-                WorkRequest uploadWorkRequest =
-                        new OneTimeWorkRequest.Builder(CountdownWorker.class)
-                                .setInputData(projectData)
-                                .addTag("worker")
-                                .build();
+                    startedWorker++;
+//                    WorkRequest uploadWorkRequest =
+//                            new OneTimeWorkRequest.Builder(CountdownWorker.class)
+//
+//                                    .setInputData(projectData)
+//                                    .addTag(String.valueOf(startedWorker))
+//                                    .build();
+//
+//                    WorkManager
+//                            .getInstance(view.getContext())
+//                            .enqueue(uploadWorkRequest);
 
-                WorkManager
 
-                        .getInstance(view.getContext())
-                        .enqueue(uploadWorkRequest);
+                    OneTimeWorkRequest uploadWorkRequest =
+                            new OneTimeWorkRequest.Builder(CountdownWorker.class)
+                                    .setConstraints(new Constraints.Builder()
 
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    view.getContext().startForegroundService(new Intent(view.getContext(), CountdownService.class));
-//                }
+                                            .build())
+                                    .setInputData(projectData)
+                                    .addTag(String.valueOf(startedWorker))
+                                    .build();
+
+                    WorkManager
+                            .getInstance(view.getContext())
+                            .enqueueUniqueWork(String.valueOf(startedWorker), ExistingWorkPolicy.REPLACE,uploadWorkRequest);
+
+                }
 
 //                WorkManager.getInstance().cancelAllWorkByTag("worker");
 
@@ -139,6 +179,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 //                }
             }
         });
+
     }
 
 

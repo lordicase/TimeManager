@@ -22,7 +22,7 @@
         <activity android:name=".AddProjectActivity">
 
         </activity>
-        <service android:name=".CountdownService" />
+
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="location|microphone"

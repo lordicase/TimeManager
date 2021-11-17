@@ -2,9 +2,6 @@ package com.example.timemanager;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
-import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE;
-import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
-import static android.os.Process.THREAD_PRIORITY_VIDEO;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,9 +9,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Build;
-import android.os.CountDownTimer;
-import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -33,10 +27,11 @@ public class CountdownWorker extends Worker {
     Data imputData;
     Project project;
     String CHANNEL_ID = "CHANNEL_ID";
-    int notificationId = 0;
+
 
     public CountdownWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             notificationManager = (NotificationManager)
                     context.getSystemService(NOTIFICATION_SERVICE);
@@ -58,24 +53,27 @@ public class CountdownWorker extends Worker {
         // Mark the Worker as important
         String progress = "Starting Download";
         setForegroundAsync(createForegroundInfo(progress));
-        download(inputUrl, outputFile);
+        startCountdown();
 
         return Result.success();
     }
 
-    private void download(String inputUrl, String outputFile) {
-        for (int i = 0; i <= ((project.getTime() - project.getTimeDone()) / 1000); i++) {
-            Log.d("CountdownWorker", "run: " + i);
-            try {
-                notificationId++;
-                project.setTimeDone(project.getTimeDone() + 1000);
-                projectViewModel.update(project);
-                setForegroundAsync(createForegroundInfo(String.valueOf(project.getTimeDone())));
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    private void startCountdown() {
+        int count = (project.getTime() - project.getTimeDone()) / 1000;
+        for (int i = 0; i <= count; i++) {
 
+            if (!isStopped()) {
+
+                try {
+                    project.setTimeDone(project.getTimeDone() + 1000);
+                    projectViewModel.update(project);
+                    setForegroundAsync(createForegroundInfo(String.valueOf(project.getTimeDone())));
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
 
     }
@@ -107,7 +105,7 @@ public class CountdownWorker extends Worker {
                 .addAction(android.R.drawable.ic_delete, cancel, intent)
                 .build();
 
-        return new ForegroundInfo(11, notification,FOREGROUND_SERVICE_TYPE_LOCATION);
+        return new ForegroundInfo(11, notification, FOREGROUND_SERVICE_TYPE_LOCATION);
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -123,5 +121,10 @@ public class CountdownWorker extends Worker {
         notificationManager = (NotificationManager)
                 getApplicationContext().getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
+    }
+
+    @Override
+    public void onStopped() {
+        super.onStopped();
     }
 }
