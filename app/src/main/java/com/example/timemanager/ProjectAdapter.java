@@ -32,8 +32,8 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
 
     private OnItemClickListener listener;
-    int startedPosition = -1;
-    int startedWorker = 0;
+    int startedPosition = MainActivity.startedPosition;
+    int startedWorker = MainActivity.startedWorker;
 
 
     public ProjectAdapter() {
@@ -122,27 +122,17 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
                     Toast.makeText(view.getContext(), "Starting " + currentproject.getTitle(), Toast.LENGTH_SHORT).show();
                     holder.imageButton.setImageResource(R.drawable.ic_round_pause);
-
+                    startedWorker++;
                     Data projectData = new Data.Builder()
                             .putInt("id", currentproject.getId())
                             .putInt("time", currentproject.getTime())
                             .putInt("timeDone", currentproject.getTimeDone())
                             .putString("title", currentproject.getTitle())
                             .putString("color", currentproject.getColor())
+                            .putInt("startedPosition", startedPosition)
+                            .putInt("startedWorker", startedWorker)
                             .build();
 
-
-                    startedWorker++;
-//                    WorkRequest uploadWorkRequest =
-//                            new OneTimeWorkRequest.Builder(CountdownWorker.class)
-//
-//                                    .setInputData(projectData)
-//                                    .addTag(String.valueOf(startedWorker))
-//                                    .build();
-//
-//                    WorkManager
-//                            .getInstance(view.getContext())
-//                            .enqueue(uploadWorkRequest);
 
 
                     OneTimeWorkRequest uploadWorkRequest =
@@ -160,23 +150,6 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
                 }
 
-//                WorkManager.getInstance().cancelAllWorkByTag("worker");
-
-//                if (countdown != null) {
-//                    countdown.cancel();
-//                    notifyItemChanged(startedPosition);
-//                }
-//                if (holder.getAdapterPosition() == startedPosition) {
-//                    startedPosition = -1;
-//                    holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
-//                } else {
-//                    startedPosition = holder.getAdapterPosition();
-//
-//                    holder.imageButton.setImageResource(R.drawable.ic_round_pause);
-//                    countdown = new Countdown((currentproject.getTime() - currentproject.getTimeDone()), 1000, currentproject, holder.getAdapterPosition());
-//                    countdown.start();
-//
-//                }
             }
         });
 

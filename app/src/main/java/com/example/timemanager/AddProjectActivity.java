@@ -93,8 +93,8 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
                 popupWindow = new PopupWindow(popupView, width, height, true);
 
-                // show the popup window
-                // which view you pass in doesn't matter, it is only used for the window tolken
+
+
                 popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
                 View container = popupWindow.getContentView().getRootView();
@@ -144,11 +144,11 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(this, "Please insert project title", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent data = new Intent();
-        data.putExtra(EXTRA_TITLE, title);
-        data.putExtra(EXTRA_COLOR, color);
-        data.putExtra(EXTRA_TIME, timePerDay);
-        setResult(Activity.RESULT_OK, data);
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_TITLE, title);
+        intent.putExtra(EXTRA_COLOR, color);
+        intent.putExtra(EXTRA_TIME, timePerDay);
+        setResult(Activity.RESULT_OK, intent);
         finish();
 
     }

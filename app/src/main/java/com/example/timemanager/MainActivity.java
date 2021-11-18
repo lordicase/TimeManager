@@ -23,17 +23,18 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static ProjectViewModel projectViewModel;
-    private static RecyclerView recycleView;
-
+    static int startedPosition = -1;
+    static int startedWorker = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        onNewIntent(getIntent());
 
 
-        recycleView = (RecyclerView) findViewById(R.id.recyclerview);
+        RecyclerView recycleView = (RecyclerView) findViewById(R.id.recyclerview);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
         ProjectAdapter projectAdapter = new ProjectAdapter();
         recycleView.setAdapter(projectAdapter);
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         String color = intent.getStringExtra(AddProjectActivity.EXTRA_COLOR);
                         int timePerDay = intent.getIntExtra(AddProjectActivity.EXTRA_TIME, 0);
 
-                        Project project = new Project(title,timePerDay,color);
+                        Project project = new Project(title, timePerDay, color);
                         projectViewModel.insert(project);
 
                         Toast.makeText(MainActivity.this, "Project saved", Toast.LENGTH_SHORT).show();
@@ -74,4 +75,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("startedPosition")) {
+
+                // extract the extra-data in the Notification
+                startedPosition = extras.getInt("startedPosition",-1);
+                startedWorker = extras.getInt("startedWorker",0);
+            }
+        }
+
+    }
 }

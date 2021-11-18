@@ -7,7 +7,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -15,19 +17,18 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.work.Data;
 import androidx.work.ForegroundInfo;
-import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 public class CountdownWorker extends Worker {
-    private static final String KEY_INPUT_URL = "KEY_INPUT_URL";
-    private static final String KEY_OUTPUT_FILE_NAME = "KEY_OUTPUT_FILE_NAME";
+
     private NotificationManager notificationManager;
     ProjectViewModel projectViewModel;
-    Data imputData;
+    Data inputData;
     Project project;
     String CHANNEL_ID = "CHANNEL_ID";
-
+    String progress;
+    int startedWorker, startedPosition;
 
     public CountdownWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -37,24 +38,22 @@ public class CountdownWorker extends Worker {
                     context.getSystemService(NOTIFICATION_SERVICE);
         }
 
-        imputData = getInputData();
-        project = new Project(imputData.getString("title"), imputData.getInt("time", 0), imputData.getString("color"));
-        project.setId(imputData.getInt("id", -1));
-        project.setTimeDone(imputData.getInt("timeDone", 0));
+        inputData = getInputData();
+        project = new Project(inputData.getString("title"), inputData.getInt("time", 0), inputData.getString("color"));
+        project.setId(inputData.getInt("id", -1));
+        project.setTimeDone(inputData.getInt("timeDone", 0));
         projectViewModel = MainActivity.projectViewModel;
+        startedPosition = inputData.getInt("startedPosition", -1);
+        startedWorker = inputData.getInt("startedWorker", 0);
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        Data inputData = getInputData();
-        String inputUrl = inputData.getString(KEY_INPUT_URL);
-        String outputFile = inputData.getString(KEY_OUTPUT_FILE_NAME);
+
         // Mark the Worker as important
-        String progress = "Starting Download";
         setForegroundAsync(createForegroundInfo(progress));
         startCountdown();
-
         return Result.success();
     }
 
@@ -67,7 +66,14 @@ public class CountdownWorker extends Worker {
                 try {
                     project.setTimeDone(project.getTimeDone() + 1000);
                     projectViewModel.update(project);
-                    setForegroundAsync(createForegroundInfo(String.valueOf(project.getTimeDone())));
+                    if (project.getTime() <= 3600000) {
+                        progress = project.getTitle() + ": " + ((project.getTimeDone() / 60000) + " : " + ((project.getTimeDone() % 60000) / 1000) + "/" +
+                                (project.getTime() / 60000) + " : " + ((project.getTime() % 60000) / 1000));
+                    } else {
+                        progress = project.getTitle() + ": " + (project.getTimeDone() / 3600000 + " : " + ((project.getTimeDone() % 3600000) / 60000) + "/" +
+                                project.getTime() / 3600000 + " : " + ((project.getTime() % 3600000) / 60000));
+                    }
+                    setForegroundAsync(createForegroundInfo(progress));
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -83,26 +89,31 @@ public class CountdownWorker extends Worker {
         // Build a notification using bytesRead and contentLength
 
         Context context = getApplicationContext();
-        String id = "notification_channel_id";
-        String title = progress;
-        String cancel = "cancel_download";
+
+
+
         // This PendingIntent can be used to cancel the worker
-        PendingIntent intent = WorkManager.getInstance(context)
-                .createCancelPendingIntent(getId());
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.putExtra("startedPosition", startedPosition);
+        resultIntent.putExtra("startedWorker", startedWorker);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        PendingIntent intent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
         }
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(title)
-                .setTicker(title)
-                .setSmallIcon(R.drawable.ic_round_pause)
+                .setContentIntent(intent)
+                .setContentTitle(progress)
+                .setTicker(progress)
+                .setSmallIcon(R.drawable.ic_timer)
                 .setOngoing(true)
                 .setSilent(true)
                 // Add the cancel action to the notification which can
                 // be used to cancel the worker
-                .addAction(android.R.drawable.ic_delete, cancel, intent)
+
                 .build();
 
         return new ForegroundInfo(11, notification, FOREGROUND_SERVICE_TYPE_LOCATION);
