@@ -154,7 +154,9 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         });
 
     }
-
+    public Project getProjectAt(int position) {
+        return getItem(position);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView projectTextView, timeTextView;
