@@ -1,13 +1,8 @@
 package com.example.timemanager;
 
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
-import android.support.v4.os.IResultReceiver;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +21,10 @@ import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
+
+import com.example.timemanager.entity.Project;
+
+import java.time.LocalDate;
 
 public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHolder> {
 
@@ -73,21 +71,17 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         holder.projectTextView.setText(currentproject.getTitle());
 
 
-
         if (currentproject.getTimeDone() >= currentproject.getTime()) {
             holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
             holder.imageButton.setEnabled(false);
             holder.timeTextView.setText("COMPLETED!");
 
 
-        }else {
-            if (currentproject.getTime() <= 3600000) {
-                holder.timeTextView.setText(((currentproject.getTimeDone() / 60000) + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + "/" +
-                        (currentproject.getTime() / 60000) + " : " + ((currentproject.getTime() % 60000) / 1000)));
-            } else {
-                holder.timeTextView.setText((currentproject.getTimeDone() / 3600000 + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + "/" +
-                        currentproject.getTime() / 3600000 + " : " + ((currentproject.getTime() % 3600000) / 60000)));
-            }
+        } else {
+
+                holder.timeTextView.setText((currentproject.getTimeDone() / 3600000) + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + " / " +
+                        (currentproject.getTime() / 3600000) + " : " + ((currentproject.getTime() % 3600000) / 60000) + " : " + ((currentproject.getTime() % 60000) / 1000));
+
             holder.imageButton.setEnabled(true);
             if (holder.getAdapterPosition() == startedPosition) {
                 holder.imageButton.setImageResource(R.drawable.ic_round_pause);
@@ -99,8 +93,6 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         holder.progressBar.getProgressDrawable().setColorFilter(Color.parseColor(currentproject.getColor()), PorterDuff.Mode.SRC_IN);
         holder.progressBar.setMax(currentproject.getTime());
         holder.progressBar.setProgress(currentproject.getTimeDone());
-
-
 
 
         GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
@@ -134,7 +126,6 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
                             .build();
 
 
-
                     OneTimeWorkRequest uploadWorkRequest =
                             new OneTimeWorkRequest.Builder(CountdownWorker.class)
                                     .setConstraints(new Constraints.Builder()
@@ -146,7 +137,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
                     WorkManager
                             .getInstance(view.getContext())
-                            .enqueueUniqueWork(String.valueOf(startedWorker), ExistingWorkPolicy.REPLACE,uploadWorkRequest);
+                            .enqueueUniqueWork(String.valueOf(startedWorker), ExistingWorkPolicy.REPLACE, uploadWorkRequest);
 
                 }
 
@@ -154,6 +145,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         });
 
     }
+
     public Project getProjectAt(int position) {
         return getItem(position);
     }

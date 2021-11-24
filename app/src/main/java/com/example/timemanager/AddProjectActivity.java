@@ -3,6 +3,7 @@ package com.example.timemanager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -29,12 +30,15 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
     public static final String EXTRA_TITLE = "com.example.timemanager.EXTRA_TITLE";
     public static final String EXTRA_COLOR = "com.example.timemanager.EXTRA_COLOR";
     public static final String EXTRA_TIME = "com.example.timemanager.EXTRA_TIME";
+    public static final String EXTRA_ID = "com.example.timemanager.EXTRA_ID";
     int width, height, projectColor = -769226;
     private View popupView;
     private PopupWindow popupWindow;
     private EditText editTextProjectTitle;
     private ImageView imageView34, imageView21;
     private NumberPicker hourPicker, minutesPicker;
+    int id;
+    String color = "#F44336";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +98,6 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
                 popupWindow = new PopupWindow(popupView, width, height, true);
 
 
-
                 popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
                 View container = popupWindow.getContentView().getRootView();
@@ -106,13 +109,39 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
                 wm.updateViewLayout(container, p);
             }
         });
+
+        Intent intent = getIntent();
+
+        if (intent.hasExtra(EXTRA_ID)) {
+            setTitle("Edit Project");
+            id = intent.getIntExtra(EXTRA_ID,-1);
+            color=intent.getStringExtra(EXTRA_COLOR);
+            editTextProjectTitle.setText(intent.getStringExtra(EXTRA_TITLE));
+            hourPicker.setValue(intent.getIntExtra(EXTRA_TIME, 0)/3600000);
+            minutesPicker.setValue((intent.getIntExtra(EXTRA_TIME, 0)%3600000)/60000);
+
+            GradientDrawable gd = new GradientDrawable(
+                    GradientDrawable.Orientation.RIGHT_LEFT,
+                    new int[]{Color.parseColor(intent.getStringExtra(EXTRA_COLOR)), 0xFF131313});
+
+            gd.setCornerRadius(0f);
+            findViewById(R.id.constraintLayout7).setBackground(gd);
+
+
+            imageView34.setColorFilter(Color.parseColor(color));
+            imageView21.setColorFilter(Color.parseColor(color));
+
+
+        } else {
+            setTitle("Add Project");
+        }
     }
 
 
     @Override
     public void onClick(View view) {
         projectColor = ImageViewCompat.getImageTintList((ImageView) view).getDefaultColor();
-
+        color = String.format("#%06X", (0xFFFFFF & projectColor));
         GradientDrawable gd = new GradientDrawable(
                 GradientDrawable.Orientation.RIGHT_LEFT,
                 new int[]{projectColor, 0xFF131313});
@@ -135,9 +164,10 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
 
     private void saveProject() {
+      //  projectColor = ImageViewCompat.getImageTintList((ImageView) imageView21).getDefaultColor();
         String title = editTextProjectTitle.getText().toString();
-        String color = String.format("#%06X", (0xFFFFFF & projectColor));
-        int timePerDay = (hourPicker.getValue() * 3600000 + minutesPicker.getValue()*60000);
+
+        int timePerDay = (hourPicker.getValue() * 3600000 + minutesPicker.getValue() * 60000);
 
 
         if (title.trim().isEmpty()) {
@@ -145,6 +175,7 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
             return;
         }
         Intent intent = new Intent();
+        intent.putExtra(EXTRA_ID, id);
         intent.putExtra(EXTRA_TITLE, title);
         intent.putExtra(EXTRA_COLOR, color);
         intent.putExtra(EXTRA_TIME, timePerDay);

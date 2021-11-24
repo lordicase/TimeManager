@@ -20,6 +20,9 @@ import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.timemanager.entity.Project;
+import com.example.timemanager.viewmodel.ProjectViewModel;
+
 public class CountdownWorker extends Worker {
 
     private NotificationManager notificationManager;
@@ -66,13 +69,10 @@ public class CountdownWorker extends Worker {
                 try {
                     project.setTimeDone(project.getTimeDone() + 1000);
                     projectViewModel.update(project);
-                    if (project.getTime() <= 3600000) {
-                        progress = project.getTitle() + ": " + ((project.getTimeDone() / 60000) + " : " + ((project.getTimeDone() % 60000) / 1000) + "/" +
-                                (project.getTime() / 60000) + " : " + ((project.getTime() % 60000) / 1000));
-                    } else {
-                        progress = project.getTitle() + ": " + (project.getTimeDone() / 3600000 + " : " + ((project.getTimeDone() % 3600000) / 60000) + "/" +
-                                project.getTime() / 3600000 + " : " + ((project.getTime() % 3600000) / 60000));
-                    }
+
+                        progress = project.getTitle() + ": " + ((project.getTimeDone() / 3600000) + " : " + ((project.getTimeDone() % 3600000) / 60000) + " : " + ((project.getTimeDone() % 60000) / 1000) + " / " +
+                                (project.getTime() / 3600000) + " : " + ((project.getTime() % 3600000) / 60000) + " : " + ((project.getTime() % 60000) / 1000));
+
                     setForegroundAsync(createForegroundInfo(progress));
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

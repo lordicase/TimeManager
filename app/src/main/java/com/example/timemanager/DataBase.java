@@ -9,10 +9,16 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = Project.class, version = 5)
+import com.example.timemanager.dao.ProjectDao;
+import com.example.timemanager.dao.TaskDao;
+import com.example.timemanager.entity.Project;
+import com.example.timemanager.entity.Task;
+
+@Database(entities = {Project.class, Task.class}, version = 6)
 public abstract class DataBase extends RoomDatabase {
     private static DataBase instance;
     public abstract ProjectDao projectDao();
+    public abstract TaskDao taskDao();
 
     public static synchronized DataBase getInstance(Context context){
         if(instance == null){

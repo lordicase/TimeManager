@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.timemanager.entity.Project;
+import com.example.timemanager.viewmodel.ProjectViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         buttonAddProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mStartForResult.launch(new Intent(MainActivity.this, AddProjectActivity.class));
+                addProjectStartForResult.launch(new Intent(MainActivity.this, AddProjectActivity.class));
             }
         });
 
@@ -71,9 +73,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Project deleted", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(recycleView);
+
+        projectAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Project project) {
+                Intent intent = new Intent(MainActivity.this, AddProjectActivity.class);
+                intent.putExtra(AddProjectActivity.EXTRA_ID, project.getId());
+                intent.putExtra(AddProjectActivity.EXTRA_TITLE, project.getTitle());
+                intent.putExtra(AddProjectActivity.EXTRA_COLOR, project.getColor());
+                intent.putExtra(AddProjectActivity.EXTRA_TIME, project.getTime());
+                editProjectStartForResult.launch( intent);
+
+            }
+        });
     }
 
-    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+    ActivityResultLauncher<Intent> addProjectStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
@@ -85,6 +100,29 @@ public class MainActivity extends AppCompatActivity {
 
                         Project project = new Project(title, timePerDay, color);
                         projectViewModel.insert(project);
+
+                        Toast.makeText(MainActivity.this, "Project saved", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+    ActivityResultLauncher<Intent> editProjectStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        if (intent.getIntExtra(AddProjectActivity.EXTRA_ID,-1)==-1){
+                            Toast.makeText(getApplicationContext(), "Project can't be updated", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String title = intent.getStringExtra(AddProjectActivity.EXTRA_TITLE);
+                        String color = intent.getStringExtra(AddProjectActivity.EXTRA_COLOR);
+                        int timePerDay = intent.getIntExtra(AddProjectActivity.EXTRA_TIME, 0);
+
+                        Project project = new Project(title, timePerDay, color);
+                        project.setId(intent.getIntExtra(AddProjectActivity.EXTRA_ID,-1));
+                        projectViewModel.update(project);
 
                         Toast.makeText(MainActivity.this, "Project saved", Toast.LENGTH_SHORT).show();
                     }

@@ -4,53 +4,52 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.timemanager.dao.ProjectDao;
-import com.example.timemanager.entity.Project;
+import com.example.timemanager.dao.TaskDao;
+import com.example.timemanager.entity.Task;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ProjectRepository {
-    private ProjectDao projectDao;
-    private LiveData<List<Project>> allProject;
+public class TaskRepository {
+    private TaskDao taskDao;
+    private LiveData<List<Task>> allTasks;
     final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ProjectRepository(Application application) {
+    public TaskRepository(Application application) {
         DataBase dataBase = DataBase.getInstance(application);
-        projectDao = dataBase.projectDao();
-        allProject = projectDao.getAllProjects();
-
+        taskDao = dataBase.taskDao();
+        allTasks = taskDao.getAllTasks();
     }
 
-    public void insert(Project project) {
+    public void insert(Task task) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                projectDao.insert(project);
+                taskDao.insert(task);
             }
         });
     }
 
-    public void update(Project project) {
+    public void update(Task task) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                projectDao.update(project);
+                taskDao.update(task);
             }
         });
     }
 
-    public void delete(Project project) {
+    public void delete(Task task) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                projectDao.delete(project);
+                taskDao.delete(task);
             }
         });
     }
 
-    public LiveData<List<Project>> getAllProject() {
-        return allProject;
+    public LiveData<List<Task>> getAllTask() {
+        return allTasks;
     }
 }
