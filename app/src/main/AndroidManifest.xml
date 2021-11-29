@@ -22,6 +22,9 @@
         <activity android:name=".AddProjectActivity">
 
         </activity>
+        <activity android:name=".TaskActivity">
+
+        </activity>
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"

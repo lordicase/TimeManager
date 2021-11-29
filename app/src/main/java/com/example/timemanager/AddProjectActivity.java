@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,11 +19,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ImageViewCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.timemanager.entity.Project;
+import com.example.timemanager.entity.Task;
+import com.example.timemanager.viewmodel.TaskViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.List;
 
 
 public class AddProjectActivity extends AppCompatActivity implements View.OnClickListener {
@@ -31,14 +47,18 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
     public static final String EXTRA_COLOR = "com.example.timemanager.EXTRA_COLOR";
     public static final String EXTRA_TIME = "com.example.timemanager.EXTRA_TIME";
     public static final String EXTRA_ID = "com.example.timemanager.EXTRA_ID";
-    int width, height, projectColor = -769226;
-    private View popupView;
+
+    int width;
+    int height;
+    static int projectColor = -769226;
+    private View selectColorPopupView;
     private PopupWindow popupWindow;
     private EditText editTextProjectTitle;
-    private ImageView imageView34, imageView21;
+    private ImageView  imageView34, imageView21;
     private NumberPicker hourPicker, minutesPicker;
+
     int id;
-    String color = "#F44336";
+    static String color = "#F44336";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,31 +93,30 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
-        popupView = inflater.inflate(R.layout.select_color_popup, null);
+        selectColorPopupView = inflater.inflate(R.layout.select_color_popup, null);
+
         // create the popup window
         width = LinearLayout.LayoutParams.WRAP_CONTENT;
         height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
-        popupView.findViewById(R.id.imageView21).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView22).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView23).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView24).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView26).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView27).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView28).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView29).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView30).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView31).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView32).setOnClickListener(this);
-        popupView.findViewById(R.id.imageView33).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView21).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView22).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView23).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView24).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView26).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView27).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView28).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView29).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView30).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView31).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView32).setOnClickListener(this);
+        selectColorPopupView.findViewById(R.id.imageView33).setOnClickListener(this);
 
         findViewById(R.id.imageView21).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                popupWindow = new PopupWindow(popupView, width, height, true);
-
-
+                popupWindow = new PopupWindow(selectColorPopupView, width, height, true);
                 popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
                 View container = popupWindow.getContentView().getRootView();
@@ -114,11 +133,11 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
         if (intent.hasExtra(EXTRA_ID)) {
             setTitle("Edit Project");
-            id = intent.getIntExtra(EXTRA_ID,-1);
-            color=intent.getStringExtra(EXTRA_COLOR);
+            id = intent.getIntExtra(EXTRA_ID, -1);
+            color = intent.getStringExtra(EXTRA_COLOR);
             editTextProjectTitle.setText(intent.getStringExtra(EXTRA_TITLE));
-            hourPicker.setValue(intent.getIntExtra(EXTRA_TIME, 0)/3600000);
-            minutesPicker.setValue((intent.getIntExtra(EXTRA_TIME, 0)%3600000)/60000);
+            hourPicker.setValue(intent.getIntExtra(EXTRA_TIME, 0) / 3600000);
+            minutesPicker.setValue((intent.getIntExtra(EXTRA_TIME, 0) % 3600000) / 60000);
 
             GradientDrawable gd = new GradientDrawable(
                     GradientDrawable.Orientation.RIGHT_LEFT,
@@ -132,12 +151,42 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
             imageView21.setColorFilter(Color.parseColor(color));
 
 
+
+
+
         } else {
             setTitle("Add Project");
         }
+//        NavigationBarView navigationBarView = findViewById(R.id.bottom_navigatin_view);
+//        navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                return false;
+//            }
+//        });
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigatin_view);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
+                switch (item.getItemId()) {
+                    case R.id.project:
+                        Intent intentProject = new Intent(AddProjectActivity.this,AddProjectActivity.class);
+                        startActivity(intentProject);
+                    case R.id.task:
+                        Intent intentTask = new Intent(AddProjectActivity.this,TaskActivity.class);
+                        startActivity(intentTask);
+                    default:
+                        return true;
+                }
+            }
+        });
     }
 
 
+    //on chose color dot click
     @Override
     public void onClick(View view) {
         projectColor = ImageViewCompat.getImageTintList((ImageView) view).getDefaultColor();
@@ -148,7 +197,6 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
         gd.setCornerRadius(0f);
         findViewById(R.id.constraintLayout7).setBackground(gd);
-
 
         imageView34.setColorFilter(projectColor);
         imageView21.setColorFilter(projectColor);
@@ -164,7 +212,7 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
 
     private void saveProject() {
-      //  projectColor = ImageViewCompat.getImageTintList((ImageView) imageView21).getDefaultColor();
+
         String title = editTextProjectTitle.getText().toString();
 
         int timePerDay = (hourPicker.getValue() * 3600000 + minutesPicker.getValue() * 60000);
@@ -184,13 +232,21 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_project:
                 saveProject();
+            case R.id.project:
+
+            case R.id.task:
+                Intent intent = new Intent(this,TaskActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }

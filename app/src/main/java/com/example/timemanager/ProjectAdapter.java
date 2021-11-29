@@ -60,7 +60,6 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_project, parent, false);
         return new ViewHolder(view);
-
     }
 
     @Override

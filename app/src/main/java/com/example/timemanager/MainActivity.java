@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        FloatingActionButton buttonAddProject = findViewById(R.id.add_item);
+        FloatingActionButton buttonAddProject = findViewById(R.id.add_task);
         buttonAddProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
