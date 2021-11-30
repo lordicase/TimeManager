@@ -1,4 +1,4 @@
-package com.example.timemanager;
+package com.example.timemanager.ui2.project;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,26 +18,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ImageViewCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.timemanager.entity.Project;
-import com.example.timemanager.entity.Task;
-import com.example.timemanager.viewmodel.TaskViewModel;
+import com.example.timemanager.R;
+import com.example.timemanager.ui2.projectTasks.TaskActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.List;
 
 
 public class AddProjectActivity extends AppCompatActivity implements View.OnClickListener {
@@ -58,7 +47,7 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
     private NumberPicker hourPicker, minutesPicker;
 
     int id;
-    static String color = "#F44336";
+    public static String color = "#F44336";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,11 +161,13 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
 
 
                 switch (item.getItemId()) {
+                    case R.id.save_project:
+                        saveProject();
                     case R.id.project:
                         Intent intentProject = new Intent(AddProjectActivity.this,AddProjectActivity.class);
                         startActivity(intentProject);
                     case R.id.task:
-                        Intent intentTask = new Intent(AddProjectActivity.this,TaskActivity.class);
+                        Intent intentTask = new Intent(AddProjectActivity.this, TaskActivity.class);
                         startActivity(intentTask);
                     default:
                         return true;
@@ -238,11 +229,6 @@ public class AddProjectActivity extends AppCompatActivity implements View.OnClic
         switch (item.getItemId()) {
             case R.id.save_project:
                 saveProject();
-            case R.id.project:
-
-            case R.id.task:
-                Intent intent = new Intent(this,TaskActivity.class);
-                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }

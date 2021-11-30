@@ -1,36 +1,26 @@
-package com.example.timemanager;
+package com.example.timemanager.ui2.projectTasks;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.timemanager.entity.Task;
+import com.example.timemanager.R;
+import com.example.timemanager.TaskAdapter;
+import com.example.timemanager.ui2.project.AddProjectActivity;
 import com.example.timemanager.viewmodel.TaskViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.List;
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -68,7 +58,7 @@ public class TaskActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.project:
-                        Intent intentProject = new Intent(TaskActivity.this,AddProjectActivity.class);
+                        Intent intentProject = new Intent(TaskActivity.this, AddProjectActivity.class);
                         startActivity(intentProject);
                     case R.id.task:
                         Intent intentTask = new Intent(TaskActivity.this,TaskActivity.class);

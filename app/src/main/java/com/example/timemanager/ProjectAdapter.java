@@ -24,14 +24,13 @@ import androidx.work.WorkManager;
 
 import com.example.timemanager.entity.Project;
 
-import java.time.LocalDate;
-
 public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHolder> {
 
 
     private OnItemClickListener listener;
-    int startedPosition = MainActivity.startedPosition;
-    int startedWorker = MainActivity.startedWorker;
+    int startedPosition = MainActivity.getStartedPosition();
+     int startedWorker = MainActivity.getStartedWorker();
+
 
 
     public ProjectAdapter() {
@@ -59,6 +58,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_project, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -150,6 +150,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         TextView projectTextView, timeTextView;
         ImageView imageView;
         ProgressBar progressBar;

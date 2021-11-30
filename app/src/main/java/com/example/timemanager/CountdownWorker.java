@@ -21,6 +21,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.example.timemanager.entity.Project;
+import com.example.timemanager.ui.projects.ProjectsFragment;
 import com.example.timemanager.viewmodel.ProjectViewModel;
 
 public class CountdownWorker extends Worker {
@@ -45,7 +46,7 @@ public class CountdownWorker extends Worker {
         project = new Project(inputData.getString("title"), inputData.getInt("time", 0), inputData.getString("color"));
         project.setId(inputData.getInt("id", -1));
         project.setTimeDone(inputData.getInt("timeDone", 0));
-        projectViewModel = MainActivity.projectViewModel;
+        projectViewModel = ProjectsFragment.getProjectViewModel();
         startedPosition = inputData.getInt("startedPosition", -1);
         startedWorker = inputData.getInt("startedWorker", 0);
     }

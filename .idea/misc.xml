@@ -14,12 +14,19 @@
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_add_task.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_item.xml" value="0.20520833333333333" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_main.xml" value="0.20572916666666666" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_main2.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_task.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/add_task_popup.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_dashboard.xml" value="0.246875" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_notifications.xml" value="0.246875" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_projects.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_project.xml" value="0.67" />
-        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_task.xml" value="0.19791666666666666" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_task.xml" value="0.75" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/select_color_popup.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/add_project_menu.xml" value="0.2682291666666667" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/bottom_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

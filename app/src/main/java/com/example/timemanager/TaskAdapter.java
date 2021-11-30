@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.Task;
+import com.example.timemanager.ui2.project.AddProjectActivity;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     private TaskAdapter.OnItemClickListener listener;
