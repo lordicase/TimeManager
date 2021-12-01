@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.timemanager.entity.Task;
-import com.example.timemanager.ui2.project.AddProjectActivity;
+import com.example.timemanager.ui.addproject.AddEditProjectFragment;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     private TaskAdapter.OnItemClickListener listener;
@@ -49,7 +49,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
 
         holder.titleTextView.setText(currenttask.getTitle());
         GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
-        drawable.setColor(Color.parseColor(AddProjectActivity.color));
+        drawable.setColor(Color.parseColor(AddEditProjectFragment.color));
     }
 
     public Task getTaskAt(int position) {

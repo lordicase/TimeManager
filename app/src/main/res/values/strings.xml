@@ -2,5 +2,8 @@
     <string name="app_name">TimeManager</string>
     <string name="title_projects">Projects</string>
     <string name="title_all_tasks">All tasks</string>
-
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_add_project">Project</string>
+    <string name="title_project_tasks">Project task</string>
+    <string name="title_project_stat">Project stat</string>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_add_project">
+
+    <fragment
+        android:id="@+id/navigation_add_project"
+        android:name="com.example.timemanager.ui.addproject.AddEditProjectFragment"
+  
+        tools:layout="@layout/fragment_add_project" />
+
+    <fragment
+        android:id="@+id/navigation_project_tasks"
+        android:name="com.example.timemanager.ui.projecttask.ProjectTasksFragment"
+        android:label="@string/title_project_tasks"
+        tools:layout="@layout/fragment_project_tasks" />
+
+    <fragment
+        android:id="@+id/navigation_stat"
+        android:name="com.example.timemanager.ui.projectstat.ProjectStatFragment"
+        android:label="@string/title_project_stat"
+        tools:layout="@layout/fragment_project_stat" />
+</navigation>

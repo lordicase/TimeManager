@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,19 +17,19 @@ import com.example.timemanager.databinding.FragmentAllTasksBinding;
 public class AllTasksFragment extends Fragment {
 
 
-private FragmentAllTasksBinding binding;
+    private FragmentAllTasksBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
-    binding = FragmentAllTasksBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentAllTasksBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
 
         return root;
     }
 
-@Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

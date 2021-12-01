@@ -17,9 +17,13 @@
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_main2.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_task.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/add_task_popup.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_add_project.xml" value="0.2640625" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_all_tasks.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_dashboard.xml" value="0.246875" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_notifications.xml" value="0.246875" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_project_stat.xml" value="0.2640625" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_project_tasks.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_projects.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_project.xml" value="0.67" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_task.xml" value="0.75" />
@@ -27,6 +31,7 @@
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/add_project_menu.xml" value="0.2682291666666667" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/bottom_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/menu/bottom_nav_menu2.xml" value="0.25885416666666666" />
       </map>
     </option>
   </component>
