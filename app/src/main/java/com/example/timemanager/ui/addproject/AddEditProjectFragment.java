@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +52,9 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
 
     private FragmentAddProjectBinding binding;
 
+    Button monButton, tueButton, wedButton, thuButton, friButton, satButton, sunButton;
+    String days;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -57,7 +62,6 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
 
         binding = FragmentAddProjectBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-
 
 
         hourPicker = root.findViewById(R.id.hours_picker);
@@ -83,6 +87,23 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
             }
         });
 
+
+        //days button
+        monButton = root.findViewById(R.id.monButton);
+        tueButton = root.findViewById(R.id.tueButton);
+        wedButton = root.findViewById(R.id.wedButton);
+        thuButton = root.findViewById(R.id.thuButton);
+        friButton = root.findViewById(R.id.friButton);
+        satButton = root.findViewById(R.id.satButton);
+        sunButton = root.findViewById(R.id.sunButton);
+
+        monButton.setOnClickListener(this);
+        tueButton.setOnClickListener(this);
+        wedButton.setOnClickListener(this);
+        thuButton.setOnClickListener(this);
+        friButton.setOnClickListener(this);
+        satButton.setOnClickListener(this);
+        sunButton.setOnClickListener(this);
         //COLOR CHANGING
         // inflate the layout of the popup window
         View selectColorPopupView = LayoutInflater.from(getActivity()).inflate(R.layout.select_color_popup, null);
@@ -127,7 +148,153 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
             id = MainActivity2.getId();
             title = MainActivity2.getProjectTitle();
             color = MainActivity2.getColor();
+            days = MainActivity2.getDays();
             editTextProjectTitle.setText(title);
+            hourPicker.setValue(MainActivity2.getHour());
+            minutesPicker.setValue(MainActivity2.getMinutes());
+
+            GradientDrawable gd = new GradientDrawable(
+                    GradientDrawable.Orientation.RIGHT_LEFT,
+                    new int[]{Color.parseColor(MainActivity2.getColor()), 0xFF131313});
+
+            gd.setCornerRadius(0f);
+            root.findViewById(R.id.constraintLayout7).setBackground(gd);
+
+
+            imageView34.setColorFilter(Color.parseColor(color));
+            imageView21.setColorFilter(Color.parseColor(color));
+
+            if (days.contains("MON")) {
+                monButton.setActivated(true);
+            }
+            if (days.contains("TUE")) {
+                tueButton.setActivated(true);
+            }
+            if (days.contains("WED")) {
+                wedButton.setActivated(true);
+            }
+            if (days.contains("THU")) {
+                thuButton.setActivated(true);
+            }
+            if (days.contains("FRI")) {
+                friButton.setActivated(true);
+            }
+            if (days.contains("SAT")) {
+                satButton.setActivated(true);
+            }
+            if (days.contains("SUN")) {
+                sunButton.setActivated(true);
+            }
+
+
+        } else {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Add project");
+            monButton.setActivated(true);
+            tueButton.setActivated(true);
+            wedButton.setActivated(true);
+            thuButton.setActivated(true);
+            friButton.setActivated(true);
+            satButton.setActivated(true);
+            sunButton.setActivated(true);
+
+        }
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    //on chose color dot click
+    @Override
+    public void onClick(View view) {
+        if ((view.getId() == R.id.monButton) ||
+                (view.getId() == R.id.tueButton) ||
+                (view.getId() == R.id.wedButton) ||
+                (view.getId() == R.id.thuButton) ||
+                (view.getId() == R.id.friButton) ||
+                (view.getId() == R.id.satButton) ||
+                (view.getId() == R.id.sunButton)) {
+            if (view.isActivated()) {
+                view.setActivated(false);
+            } else {
+                view.setActivated(true);
+            }
+        } else {
+            projectColor = ImageViewCompat.getImageTintList((ImageView) view).getDefaultColor();
+            color = String.format("#%06X", (0xFFFFFF & projectColor));
+            GradientDrawable gd = new GradientDrawable(
+                    GradientDrawable.Orientation.RIGHT_LEFT,
+                    new int[]{projectColor, 0xFF131313});
+
+            gd.setCornerRadius(0f);
+            root.findViewById(R.id.constraintLayout7).setBackground(gd);
+
+            imageView34.setColorFilter(projectColor);
+            imageView21.setColorFilter(projectColor);
+            popupWindow.dismiss();
+        }
+    }
+
+
+    private void saveProject() {
+
+        String title = editTextProjectTitle.getText().toString();
+        String newDays = "";
+        int timePerDay = (hourPicker.getValue() * 3600000 + minutesPicker.getValue() * 60000);
+
+        if (title.trim().isEmpty()) {
+            Toast.makeText(getActivity(), "Please insert project title", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (monButton.isActivated()) {
+            newDays += "MON";
+        }
+        if (tueButton.isActivated()) {
+            newDays += "TUE";
+        }
+        if (wedButton.isActivated()) {
+            newDays += "WED";
+        }
+        if (thuButton.isActivated()) {
+            newDays += "THU";
+        }
+        if (friButton.isActivated()) {
+            newDays += "FRI";
+        }
+        if (satButton.isActivated()) {
+            newDays += "SAT";
+        }
+        if (sunButton.isActivated()) {
+            newDays += "SUN";
+        }
+
+        Project project = new Project(title, timePerDay, color);
+        project.setDays(newDays);
+        if (id != -1) {
+            project.setId(id);
+            projectViewModel.update(project);
+        } else {
+            projectViewModel.insert(project);
+        }
+        Toast.makeText(getActivity(), "Project saved", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getActivity(), MainActivity.class));
+
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MainActivity2.getId() != -1) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit project");
+            id = MainActivity2.getId();
+            color = MainActivity2.getColor();
+            editTextProjectTitle.setText(MainActivity2.getProjectTitle());
             hourPicker.setValue(MainActivity2.getHour());
             minutesPicker.setValue(MainActivity2.getMinutes());
 
@@ -145,88 +312,7 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
         } else {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Add project");
         }
-        return root;
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    //on chose color dot click
-    @Override
-    public void onClick(View view) {
-        projectColor = ImageViewCompat.getImageTintList((ImageView) view).getDefaultColor();
-        color = String.format("#%06X", (0xFFFFFF & projectColor));
-        GradientDrawable gd = new GradientDrawable(
-                GradientDrawable.Orientation.RIGHT_LEFT,
-                new int[]{projectColor, 0xFF131313});
-
-        gd.setCornerRadius(0f);
-        root.findViewById(R.id.constraintLayout7).setBackground(gd);
-
-        imageView34.setColorFilter(projectColor);
-        imageView21.setColorFilter(projectColor);
-        popupWindow.dismiss();
-    }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        MenuInflater menuInflater = getActivity().getMenuInflater();
-//        menuInflater.inflate(R.menu.add_project_menu, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-
-
-    private void saveProject() {
-
-        String title = editTextProjectTitle.getText().toString();
-
-        int timePerDay = (hourPicker.getValue() * 3600000 + minutesPicker.getValue() * 60000);
-
-        if (title.trim().isEmpty()) {
-            Toast.makeText(getActivity(), "Please insert project title", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Project project = new Project(title, timePerDay, color);
-        if (id != -1) {
-            project.setId(id);
-            projectViewModel.update(project);
-        } else {
-            projectViewModel.insert(project);
-        }
-        Toast.makeText(getActivity(), "Project saved", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getActivity(),MainActivity.class));
-
-
-    }
-@Override
-public void onResume() {
-    super.onResume();
-    if (MainActivity2.getId() != -1) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit project");
-        id = MainActivity2.getId();
-        color = MainActivity2.getColor();
-        editTextProjectTitle.setText(MainActivity2.getProjectTitle());
-        hourPicker.setValue(MainActivity2.getHour());
-        minutesPicker.setValue(MainActivity2.getMinutes());
-
-        GradientDrawable gd = new GradientDrawable(
-                GradientDrawable.Orientation.RIGHT_LEFT,
-                new int[]{Color.parseColor(MainActivity2.getColor()), 0xFF131313});
-
-        gd.setCornerRadius(0f);
-        root.findViewById(R.id.constraintLayout7).setBackground(gd);
-
-
-        imageView34.setColorFilter(Color.parseColor(color));
-        imageView21.setColorFilter(Color.parseColor(color));
-
-    } else {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Add project");
-    }
-}
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -237,4 +323,6 @@ public void onResume() {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }

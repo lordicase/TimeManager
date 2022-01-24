@@ -41,9 +41,10 @@ public class ProjectTasksFragment extends Fragment {
 
     public static TaskViewModel taskViewModel;
     private FragmentProjectTasksBinding binding;
-
+    View addTaskPopupView;
     int width;
     int height;
+    private int selectedTaskId;
     PopupWindow popupWindow;
     private EditText editTextTaskTitle;
     private ImageView imageView;
@@ -54,7 +55,11 @@ public class ProjectTasksFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentProjectTasksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        View addTaskPopupView = LayoutInflater.from(getActivity()).inflate(R.layout.add_task_popup, null);
+        addTaskPopupView = LayoutInflater.from(getActivity()).inflate(R.layout.add_task_popup, null);
+        imageView = addTaskPopupView.findViewById(R.id.imageView);
+        textView = addTaskPopupView.findViewById(R.id.textView);
+        editTextTaskTitle = addTaskPopupView.findViewById(R.id.editText);
+
         width = LinearLayout.LayoutParams.WRAP_CONTENT;
         height = LinearLayout.LayoutParams.WRAP_CONTENT;
         RecyclerView recycleView = (RecyclerView) root.findViewById(R.id.recyclerview);
@@ -86,9 +91,18 @@ public class ProjectTasksFragment extends Fragment {
         taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task task, View view) {
-                editTextTaskTitle = addTaskPopupView.findViewById(R.id.editText);
+                showPopup(view);
                 editTextTaskTitle.setText(task.getTitle());
-//TODO: create edit task window
+                selectedTaskId = task.getId();
+            }
+        });
+
+
+        root.findViewById(R.id.add_task2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedTaskId = 0;
+                showPopup(view);
             }
         });
 
@@ -101,39 +115,39 @@ public class ProjectTasksFragment extends Fragment {
                     return;
                 }
                 Task task = new Task(editText.getText().toString(), MainActivity2.getId(), false);
-                taskViewModel.insert(task);
+                if(task.getId()==0){
+                    taskViewModel.insert(task);
+                }else{
+                    taskViewModel.update(task);
+                }
                 popupWindow.dismiss();
-            }
-        });
-
-        FloatingActionButton buttonAddTask = root.findViewById(R.id.add_task2);
-        buttonAddTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                imageView = addTaskPopupView.findViewById(R.id.imageView);
-                textView = addTaskPopupView.findViewById(R.id.textView);
-                imageView.setColorFilter(Color.parseColor(AddEditProjectFragment.color));
-                textView.setText(AddEditProjectFragment.title);
-                popupWindow = new PopupWindow(addTaskPopupView, width, height, true);
-                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-                View container = popupWindow.getContentView().getRootView();
-                Context context = popupWindow.getContentView().getContext();
-                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
-                p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                p.dimAmount = 0.5f;
-                wm.updateViewLayout(container, p);
             }
         });
 
         return root;
     }
+
+    private void showPopup(View view){
+        imageView.setColorFilter(Color.parseColor(AddEditProjectFragment.color));
+        textView.setText(AddEditProjectFragment.title);
+        popupWindow = new PopupWindow(addTaskPopupView, width, height, true);
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        View container = popupWindow.getContentView().getRootView();
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.5f;
+        wm.updateViewLayout(container, p);
+    }
+
     private void saveProject() {
         Toast.makeText(getActivity(), "Project saved", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(getActivity(), MainActivity.class));
     }
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -149,4 +163,6 @@ public class ProjectTasksFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

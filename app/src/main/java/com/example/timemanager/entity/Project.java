@@ -11,6 +11,15 @@ public class Project {
     private String title;
     private int time, timeDone;
     private String color;
+    private String days;
+
+    public void setDays(String days) {
+        this.days = days;
+    }
+
+    public String getDays() {
+        return days;
+    }
 
     public Project (String title, int time, String color){
         this.title = title;

@@ -14,12 +14,14 @@ import java.util.concurrent.Executors;
 public class ProjectRepository {
     private ProjectDao projectDao;
     private LiveData<List<Project>> allProject;
+
     final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public ProjectRepository(Application application) {
         DataBase dataBase = DataBase.getInstance(application);
         projectDao = dataBase.projectDao();
         allProject = projectDao.getAllProjects();
+
 
     }
 
@@ -52,5 +54,8 @@ public class ProjectRepository {
 
     public LiveData<List<Project>> getAllProject() {
         return allProject;
+    }
+    public LiveData<List<Project>> getDayProject(String day) {
+        return projectDao.getDayProjects(day);
     }
 }

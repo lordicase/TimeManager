@@ -1,20 +1,29 @@
 package com.example.timemanager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.timemanager.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     static int startedPosition = -8;
     static int startedWorker = 0;
-private ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
 
 
@@ -25,12 +34,13 @@ private ActivityMainBinding binding;
     public static int getStartedWorker() {
         return startedWorker;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onNewIntent(getIntent());
-     binding = ActivityMainBinding.inflate(getLayoutInflater());
-     setContentView(binding.getRoot());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -46,7 +56,6 @@ private ActivityMainBinding binding;
     }
 
 
-
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -55,12 +64,18 @@ private ActivityMainBinding binding;
             if (extras.containsKey("startedPosition")) {
 
                 // extract the extra-data in the Notification
-                startedPosition = extras.getInt("startedPosition",-1);
-                startedWorker = extras.getInt("startedWorker",0);
+                startedPosition = extras.getInt("startedPosition", -1);
+                startedWorker = extras.getInt("startedWorker", 0);
 
 
             }
         }
 
     }
+
+
+
+
+
+
 }

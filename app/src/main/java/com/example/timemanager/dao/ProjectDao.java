@@ -25,4 +25,8 @@ public interface ProjectDao {
 
     @Query("SELECT * FROM project_table")
     LiveData<List<Project>> getAllProjects();
+
+
+    @Query("SELECT * FROM project_table WHERE days like :day")
+    LiveData<List<Project>> getDayProjects(String day);
 }

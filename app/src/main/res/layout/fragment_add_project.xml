@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.addproject.AddEditProjectFragment" >
+    android:onClick="selectDays"
+    tools:context=".ui.addproject.AddEditProjectFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout7"
@@ -13,8 +13,7 @@
         android:layout_height="0dp"
         android:background="@drawable/gradient_background"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout8"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView34"
@@ -84,101 +83,103 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView21" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/friButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
             android:text="FRI"
             android:theme="@style/PopupMenu"
-            app:layout_constraintEnd_toStartOf="@+id/button6"
+            app:layout_constraintEnd_toStartOf="@+id/satButton"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button4"
+            app:layout_constraintStart_toEndOf="@+id/thuButton"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/monButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
+
             android:text="MON"
             android:theme="@style/PopupMenu"
-            app:layout_constraintEnd_toStartOf="@+id/button2"
+            app:layout_constraintEnd_toStartOf="@+id/tueButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/wedButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
             android:text="WED"
             android:theme="@style/PopupMenu"
-            app:layout_constraintEnd_toStartOf="@+id/button4"
+            app:layout_constraintEnd_toStartOf="@+id/thuButton"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button2"
+            app:layout_constraintStart_toEndOf="@+id/tueButton"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/satButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
+
             android:text="SAT"
             android:theme="@style/PopupMenu"
-            app:layout_constraintEnd_toStartOf="@+id/button7"
+            app:layout_constraintEnd_toStartOf="@+id/sunButton"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button5"
+            app:layout_constraintStart_toEndOf="@+id/friButton"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/thuButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
             android:text="THU"
             android:theme="@style/PopupMenu"
-            app:layout_constraintEnd_toStartOf="@+id/button5"
+            app:layout_constraintEnd_toStartOf="@+id/friButton"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button3"
+            app:layout_constraintStart_toEndOf="@+id/wedButton"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/sunButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
             android:text="SUN"
             android:theme="@style/PopupMenu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button6"
+            app:layout_constraintStart_toEndOf="@+id/satButton"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/tueButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_bg"
             android:text="TUE"
             android:theme="@style/PopupMenu"
-            app:layout_constraintEnd_toStartOf="@+id/button3"
+            app:layout_constraintEnd_toStartOf="@+id/wedButton"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button"
+            app:layout_constraintStart_toEndOf="@+id/monButton"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -227,6 +228,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10"/>
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
