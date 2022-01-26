@@ -68,7 +68,7 @@ public class ProjectTasksFragment extends Fragment {
         recycleView.setAdapter(taskAdapter);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getAllTask().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+        taskViewModel.getProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 taskAdapter.submitList(tasks);

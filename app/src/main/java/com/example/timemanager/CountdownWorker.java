@@ -46,6 +46,7 @@ public class CountdownWorker extends Worker {
         project = new Project(inputData.getString("title"), inputData.getInt("time", 0), inputData.getString("color"));
         project.setId(inputData.getInt("id", -1));
         project.setTimeDone(inputData.getInt("timeDone", 0));
+        project.setDays(inputData.getString("days"));
         projectViewModel = ProjectsFragment.getProjectViewModel();
         startedPosition = inputData.getInt("startedPosition", -1);
         startedWorker = inputData.getInt("startedWorker", 0);

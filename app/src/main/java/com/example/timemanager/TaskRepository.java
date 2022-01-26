@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.example.timemanager.dao.TaskDao;
+import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.Task;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.concurrent.Executors;
 public class TaskRepository {
     private TaskDao taskDao;
     private LiveData<List<Task>> allTasks;
+
     final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public TaskRepository(Application application) {
@@ -51,5 +53,9 @@ public class TaskRepository {
 
     public LiveData<List<Task>> getAllTask() {
         return allTasks;
+    }
+
+    public LiveData<List<Task>> getProjectTasks(String project) {
+        return taskDao.getProjectTasks(project);
     }
 }

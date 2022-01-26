@@ -120,6 +120,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
                             .putInt("timeDone", currentproject.getTimeDone())
                             .putString("title", currentproject.getTitle())
                             .putString("color", currentproject.getColor())
+                            .putString("days", currentproject.getDays())
                             .putInt("startedPosition", startedPosition)
                             .putInt("startedWorker", startedWorker)
                             .build();

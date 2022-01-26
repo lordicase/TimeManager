@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.timemanager.TaskRepository;
+import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.Task;
 
 import java.util.List;
@@ -25,4 +26,5 @@ public class TaskViewModel extends AndroidViewModel {
     public void update(Task task){repository.update(task);}
     public void delete(Task task){repository.delete(task);}
     public LiveData<List<Task>> getAllTask(){return allTask;}
+    public LiveData<List<Task>> getProjectTasks(String project){return repository.getProjectTasks(project);}
 }

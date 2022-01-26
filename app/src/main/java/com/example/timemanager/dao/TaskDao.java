@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.Task;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface TaskDao {
 
     @Query("SELECT * FROM task_table")
     LiveData<List<Task>> getAllTasks();
+
+    @Query("SELECT * FROM task_table WHERE projectId like :project")
+    LiveData<List<Task>> getProjectTasks(String project);
 }
