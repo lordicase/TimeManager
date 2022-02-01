@@ -29,4 +29,7 @@ public interface ProjectDao {
 
     @Query("SELECT * FROM project_table WHERE days like :day")
     LiveData<List<Project>> getDayProjects(String day);
+
+    @Query("UPDATE project_table set timeDone = 0")
+    void resetTimeDone();
 }

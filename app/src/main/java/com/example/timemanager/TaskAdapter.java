@@ -48,8 +48,9 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
         Task currenttask = getItem(position);
 
         holder.titleTextView.setText(currenttask.getTitle());
+        holder.projectTitleTextView.setText(currenttask.getProjectTitle());
         GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
-        drawable.setColor(Color.parseColor(AddEditProjectFragment.color));
+        drawable.setColor(Color.parseColor(currenttask.getColor()));
     }
 
     public Task getTaskAt(int position) {
@@ -57,7 +58,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView titleTextView;
+        TextView titleTextView, projectTitleTextView;
         ImageView imageView;
         ImageButton imageButton;
 
@@ -66,6 +67,8 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
             titleTextView = itemView.findViewById(R.id.textView1);
             imageView = itemView.findViewById(R.id.imageView);
             imageButton = itemView.findViewById(R.id.imageButton);
+            projectTitleTextView = itemView.findViewById(R.id.textView6);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

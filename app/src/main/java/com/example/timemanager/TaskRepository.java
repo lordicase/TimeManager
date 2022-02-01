@@ -58,4 +58,23 @@ public class TaskRepository {
     public LiveData<List<Task>> getProjectTasks(String project) {
         return taskDao.getProjectTasks(project);
     }
+
+    public void deleteProjectTasks(String projectTitle) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                taskDao.deleteProjectTasks(projectTitle);
+            }
+        });
+    }
+
+    public void updateTaskProjectTitle(int projectId, String newProjectTitle, String color) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                taskDao.updateTaskProjectTitle(projectId, newProjectTitle, color);
+            }
+        });
+    }
 }
+

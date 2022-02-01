@@ -27,6 +27,7 @@ import com.example.timemanager.R;
 import com.example.timemanager.databinding.FragmentProjectsBinding;
 import com.example.timemanager.entity.Project;
 import com.example.timemanager.viewmodel.ProjectViewModel;
+import com.example.timemanager.viewmodel.TaskViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -39,8 +40,10 @@ public class ProjectsFragment extends Fragment {
 
     private FragmentProjectsBinding binding;
     static ProjectViewModel projectViewModel;
+    static TaskViewModel taskViewModel;
     public static SharedPreferences sharedPreferences;
     public static Boolean showAll = true;
+
     public static ProjectViewModel getProjectViewModel() {
         return projectViewModel;
     }
@@ -61,7 +64,7 @@ public class ProjectsFragment extends Fragment {
         recycleView.setAdapter(projectAdapter);
 
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
-
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
         if (showAll) {
             projectViewModel.getAllProject().observe(getViewLifecycleOwner(), new Observer<List<Project>>() {
@@ -72,7 +75,7 @@ public class ProjectsFragment extends Fragment {
             });
         } else {
 
-            projectViewModel.getDayProject("%"+new SimpleDateFormat("EEE", Locale.ENGLISH).format(new Date())+"%").observe(getViewLifecycleOwner(), new Observer<List<Project>>() {
+            projectViewModel.getDayProject("%" + new SimpleDateFormat("EEE", Locale.ENGLISH).format(new Date()) + "%").observe(getViewLifecycleOwner(), new Observer<List<Project>>() {
                 @Override
                 public void onChanged(List<Project> projects) {
                     projectAdapter.submitList(projects);
@@ -101,6 +104,7 @@ public class ProjectsFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 projectViewModel.delete(projectAdapter.getProjectAt(viewHolder.getAdapterPosition()));
+                taskViewModel.deleteProjectTasks(projectAdapter.getProjectAt(viewHolder.getAdapterPosition()).getTitle());
                 Toast.makeText(getActivity(), "Project deleted", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(recycleView);
@@ -129,17 +133,18 @@ public class ProjectsFragment extends Fragment {
 
         return root;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.projects_opttion_menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (sharedPreferences.getBoolean("showAllProjects", false) == true) {
             menu.findItem(R.id.show_all).setTitle("Show day projects");
-        }else {
+        } else {
             menu.findItem(R.id.show_all).setTitle("Show all");
         }
 
@@ -172,6 +177,7 @@ public class ProjectsFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

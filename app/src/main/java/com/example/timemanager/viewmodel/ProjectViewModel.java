@@ -25,6 +25,7 @@ public class ProjectViewModel extends AndroidViewModel {
     public void insert(Project project){repository.insert(project);}
     public void update(Project project){repository.update(project);}
     public void delete(Project project){repository.delete(project);}
+    public void resetTimeDone(){repository.resetTimeDone();}
     public LiveData<List<Project>> getAllProject(){return allProject;}
     public LiveData<List<Project>> getDayProject(String day){return repository.getDayProject(day);}
 }

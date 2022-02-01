@@ -52,6 +52,16 @@ public class ProjectRepository {
         });
     }
 
+    public void resetTimeDone() {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                projectDao.resetTimeDone();
+            }
+        });
+    }
+
+
     public LiveData<List<Project>> getAllProject() {
         return allProject;
     }

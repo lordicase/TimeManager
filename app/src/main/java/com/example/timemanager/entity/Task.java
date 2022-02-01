@@ -9,12 +9,18 @@ public class Task {
     private int id;
     private String title;
     private int projectId;
+    private String projectTitle;
+    private String color;
     private boolean done;
 
-    public Task(String title, int projectId, boolean done) {
+
+
+    public Task(String title, int projectId, boolean done, String projectTitle, String color) {
         this.title = title;
         this.projectId = projectId;
         this.done = done;
+        this.projectTitle = projectTitle;
+        this.color = color;
     }
 
     public void setId(int id) {
@@ -35,5 +41,11 @@ public class Task {
 
     public boolean isDone() {
         return done;
+    }
+
+    public String getProjectTitle() {return projectTitle;}
+
+    public String getColor() {
+        return color;
     }
 }

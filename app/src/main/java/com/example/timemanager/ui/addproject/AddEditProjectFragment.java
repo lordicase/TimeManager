@@ -32,6 +32,7 @@ import com.example.timemanager.R;
 import com.example.timemanager.databinding.FragmentAddProjectBinding;
 import com.example.timemanager.entity.Project;
 import com.example.timemanager.viewmodel.ProjectViewModel;
+import com.example.timemanager.viewmodel.TaskViewModel;
 
 public class AddEditProjectFragment extends Fragment implements View.OnClickListener {
 
@@ -49,6 +50,7 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
     public static String title;
     int id = -1;
     ProjectViewModel projectViewModel;
+    TaskViewModel taskViewModel;
 
     private FragmentAddProjectBinding binding;
 
@@ -76,6 +78,7 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
         minutesPicker.setMinValue(0);
         minutesPicker.setMaxValue(60);
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         hourPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
@@ -277,6 +280,7 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
         if (id != -1) {
             project.setId(id);
             projectViewModel.update(project);
+            taskViewModel.updateTaskProjectTitle(MainActivity2.getId(),title,color);
         } else {
             projectViewModel.insert(project);
         }
