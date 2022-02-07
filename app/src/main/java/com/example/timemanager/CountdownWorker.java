@@ -21,13 +21,19 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.example.timemanager.entity.Project;
+import com.example.timemanager.entity.ProjectSession;
 import com.example.timemanager.ui.projects.ProjectsFragment;
+import com.example.timemanager.viewmodel.ProjectSessionViewModel;
 import com.example.timemanager.viewmodel.ProjectViewModel;
+
+import java.util.Date;
 
 public class CountdownWorker extends Worker {
 
     private NotificationManager notificationManager;
     ProjectViewModel projectViewModel;
+    ProjectSessionViewModel projectSessionViewModel;
+
     Data inputData;
     Project project;
     String CHANNEL_ID = "CHANNEL_ID";
@@ -48,6 +54,7 @@ public class CountdownWorker extends Worker {
         project.setTimeDone(inputData.getInt("timeDone", 0));
         project.setDays(inputData.getString("days"));
         projectViewModel = ProjectsFragment.getProjectViewModel();
+        projectSessionViewModel = ProjectsFragment.getProjectSessionViewModel();
         startedPosition = inputData.getInt("startedPosition", -1);
         startedWorker = inputData.getInt("startedWorker", 0);
     }
@@ -138,6 +145,8 @@ public class CountdownWorker extends Worker {
 
     @Override
     public void onStopped() {
+
+        projectSessionViewModel.updateEndTime(inputData.getInt("id", -1),new Date().getTime(),inputData.getLong("sessionStartTime",-1));
         super.onStopped();
     }
 }

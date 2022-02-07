@@ -22,15 +22,22 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.example.timemanager.dao.ProjectSessionDao;
 import com.example.timemanager.entity.Project;
+import com.example.timemanager.entity.ProjectSession;
+import com.example.timemanager.ui.projects.ProjectsFragment;
+import com.example.timemanager.viewmodel.ProjectSessionViewModel;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHolder> {
 
 
     private OnItemClickListener listener;
     int startedPosition = MainActivity.getStartedPosition();
-     int startedWorker = MainActivity.getStartedWorker();
-
+    int startedWorker = MainActivity.getStartedWorker();
+    ProjectSessionViewModel projectSessionViewModel;
 
 
     public ProjectAdapter() {
@@ -58,7 +65,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_project, parent, false);
-
+        projectSessionViewModel = ProjectsFragment.getProjectSessionViewModel();
         return new ViewHolder(view);
     }
 
@@ -78,8 +85,8 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
         } else {
 
-                holder.timeTextView.setText((currentproject.getTimeDone() / 3600000) + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + " / " +
-                        (currentproject.getTime() / 3600000) + " : " + ((currentproject.getTime() % 3600000) / 60000) + " : " + ((currentproject.getTime() % 60000) / 1000));
+            holder.timeTextView.setText((currentproject.getTimeDone() / 3600000) + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + " / " +
+                    (currentproject.getTime() / 3600000) + " : " + ((currentproject.getTime() % 3600000) / 60000) + " : " + ((currentproject.getTime() % 60000) / 1000));
 
             holder.imageButton.setEnabled(true);
             if (holder.getAdapterPosition() == startedPosition) {
@@ -107,7 +114,11 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
                     startedWorker++;
                     holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
                     notifyItemChanged(holder.getAdapterPosition());
+
+
                 } else {
+                    long startTime =  new Date().getTime();
+                    projectSessionViewModel.insert(new ProjectSession(currentproject.getId(), currentproject.getTitle(),startTime));
                     notifyItemChanged(startedPosition);
                     startedPosition = holder.getAdapterPosition();
 
@@ -121,6 +132,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
                             .putString("title", currentproject.getTitle())
                             .putString("color", currentproject.getColor())
                             .putString("days", currentproject.getDays())
+                            .putLong("sessionStartTime",startTime)
                             .putInt("startedPosition", startedPosition)
                             .putInt("startedWorker", startedWorker)
                             .build();

@@ -32,4 +32,5 @@ public interface ProjectDao {
 
     @Query("UPDATE project_table set timeDone = 0")
     void resetTimeDone();
+
 }

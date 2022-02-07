@@ -1,9 +1,10 @@
-package com.example.timemanager;
+package com.example.timemanager.repository;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.timemanager.DataBase;
 import com.example.timemanager.dao.TaskDao;
 import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.Task;

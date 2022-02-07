@@ -26,6 +26,7 @@ import com.example.timemanager.ProjectAdapter;
 import com.example.timemanager.R;
 import com.example.timemanager.databinding.FragmentProjectsBinding;
 import com.example.timemanager.entity.Project;
+import com.example.timemanager.viewmodel.ProjectSessionViewModel;
 import com.example.timemanager.viewmodel.ProjectViewModel;
 import com.example.timemanager.viewmodel.TaskViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,6 +42,7 @@ public class ProjectsFragment extends Fragment {
     private FragmentProjectsBinding binding;
     static ProjectViewModel projectViewModel;
     static TaskViewModel taskViewModel;
+    static ProjectSessionViewModel projectSessionViewModel;
     public static SharedPreferences sharedPreferences;
     public static Boolean showAll = true;
 
@@ -48,6 +50,9 @@ public class ProjectsFragment extends Fragment {
         return projectViewModel;
     }
 
+    public static ProjectSessionViewModel getProjectSessionViewModel() {
+        return projectSessionViewModel;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class ProjectsFragment extends Fragment {
 
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        projectSessionViewModel = new  ViewModelProvider(this).get(ProjectSessionViewModel.class);
 
         if (showAll) {
             projectViewModel.getAllProject().observe(getViewLifecycleOwner(), new Observer<List<Project>>() {
@@ -122,7 +128,6 @@ public class ProjectsFragment extends Fragment {
 
             }
         });
-
 
         if (sharedPreferences.getBoolean("showAllProjects", false) == true) {
             showAll = true;

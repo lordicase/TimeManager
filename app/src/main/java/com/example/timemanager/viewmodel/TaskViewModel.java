@@ -6,8 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.timemanager.TaskRepository;
-import com.example.timemanager.entity.Project;
+import com.example.timemanager.repository.TaskRepository;
 import com.example.timemanager.entity.Task;
 
 import java.util.List;
