@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 
 import com.example.timemanager.DataBase;
 import com.example.timemanager.dao.TaskDao;
-import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.Task;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class TaskRepository {
     public TaskRepository(Application application) {
         DataBase dataBase = DataBase.getInstance(application);
         taskDao = dataBase.taskDao();
-        allTasks = taskDao.getAllTasks();
     }
 
     public void insert(Task task) {
@@ -53,12 +51,11 @@ public class TaskRepository {
     }
 
     public LiveData<List<Task>> getAllTask() {
-        return allTasks;
+        return taskDao.getAllTasks();
     }
-
-    public LiveData<List<Task>> getProjectTasks(String project) {
-        return taskDao.getProjectTasks(project);
-    }
+    public LiveData<List<Task>> getNotDoneTasks() { return taskDao.getNotDoneTasks(); }
+    public LiveData<List<Task>> getAllProjectTasks(String project) { return taskDao.getAllProjectTasks(project); }
+    public LiveData<List<Task>> getNotDoneProjectTasks(String project) { return taskDao.getNotDoneProjectTasks(project); }
 
     public void deleteProjectTasks(String projectTitle) {
         executorService.execute(new Runnable() {
@@ -74,6 +71,15 @@ public class TaskRepository {
             @Override
             public void run() {
                 taskDao.updateTaskProjectTitle(projectId, newProjectTitle, color);
+            }
+        });
+    }
+
+    public void isDoneChange(boolean done, int id){
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                taskDao.isDoneChange(done, id);
             }
         });
     }

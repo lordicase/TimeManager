@@ -18,14 +18,17 @@ public class TaskViewModel extends AndroidViewModel {
     public TaskViewModel(@NonNull Application application){
         super(application);
         repository = new TaskRepository(application);
-        allTask = repository.getAllTask();
+
     }
 
     public void insert(Task task){repository.insert(task);}
     public void update(Task task){repository.update(task);}
     public void delete(Task task){repository.delete(task);}
-    public LiveData<List<Task>> getAllTask(){return allTask;}
-    public LiveData<List<Task>> getProjectTasks(String project){return repository.getProjectTasks(project);}
+    public LiveData<List<Task>> getAllTask(){return repository.getAllTask();}
+    public LiveData<List<Task>> getNotDoneTasks(){return repository.getNotDoneTasks();}
+    public LiveData<List<Task>> getAllProjectTasks(String project){return repository.getAllProjectTasks(project);}
+    public LiveData<List<Task>> getNotDoneProjectTasks(String project){return repository.getNotDoneProjectTasks(project);}
     public void deleteProjectTasks(String projectTitle){repository.deleteProjectTasks(projectTitle);}
     public void updateTaskProjectTitle(int projectId, String newProjectTitle, String color){repository.updateTaskProjectTitle(projectId,newProjectTitle,color);}
+    public void isDoneChange(boolean done, int id){repository.isDoneChange(done,id);}
 }

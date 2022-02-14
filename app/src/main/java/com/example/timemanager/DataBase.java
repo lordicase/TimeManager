@@ -16,7 +16,7 @@ import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.ProjectSession;
 import com.example.timemanager.entity.Task;
 
-@Database(entities = {Project.class, Task.class, ProjectSession.class}, version = 13)
+@Database(entities = {Project.class, Task.class, ProjectSession.class}, version = 15)
 public abstract class DataBase extends RoomDatabase {
     private static DataBase instance;
     public abstract ProjectDao projectDao();

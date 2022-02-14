@@ -27,12 +27,21 @@ public interface TaskDao {
     @Query("SELECT * FROM task_table")
     LiveData<List<Task>> getAllTasks();
 
+    @Query("SELECT * FROM task_table WHERE done = 0")
+    LiveData<List<Task>> getNotDoneTasks();
+
     @Query("SELECT * FROM task_table WHERE projectId like :project")
-    LiveData<List<Task>> getProjectTasks(String project);
+    LiveData<List<Task>> getAllProjectTasks(String project);
+
+    @Query("SELECT * FROM task_table WHERE projectId like :project AND done = 0")
+    LiveData<List<Task>> getNotDoneProjectTasks(String project);
 
     @Query("DELETE FROM task_table WHERE projectTitle = :projectTitle")
     void deleteProjectTasks(String projectTitle);
 
     @Query("UPDATE task_table SET projectTitle = :newProjectTitle, color = :color WHERE projectTitle = :projectId")
     void updateTaskProjectTitle(int projectId, String newProjectTitle, String color);
+
+    @Query("UPDATE task_table SET done = :done WHERE id = :id")
+    void isDoneChange(boolean done, int id);
 }

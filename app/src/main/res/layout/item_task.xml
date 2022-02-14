@@ -37,7 +37,7 @@
         android:baselineAlignBottom="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?android:attr/listChoiceIndicatorSingle" />
+        app:srcCompat="@drawable/ic_circle" />
 
     <ImageView
         android:id="@+id/imageView3"

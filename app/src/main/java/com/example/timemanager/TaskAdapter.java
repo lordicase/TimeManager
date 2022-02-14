@@ -16,13 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.timemanager.entity.Task;
 import com.example.timemanager.ui.addproject.AddEditProjectFragment;
+import com.example.timemanager.ui.projects.ProjectsFragment;
+import com.example.timemanager.viewmodel.TaskViewModel;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     private TaskAdapter.OnItemClickListener listener;
+    private TaskViewModel taskViewModel;
 
     public TaskAdapter() {
         super(DIFF_CALLBACK);
     }
+
     private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
         @Override
         public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
@@ -40,17 +44,33 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_task, parent, false);
+        taskViewModel = ProjectsFragment.getTaskViewModel();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Task currenttask = getItem(position);
-
+        if (currenttask.isDone()) {
+            holder.imageButton.setImageResource(R.drawable.ic_done);
+        } else {
+            holder.imageButton.setImageResource(R.drawable.ic_circle);
+        }
         holder.titleTextView.setText(currenttask.getTitle());
         holder.projectTitleTextView.setText(currenttask.getProjectTitle());
         GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
         drawable.setColor(Color.parseColor(currenttask.getColor()));
+
+        holder.imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currenttask.isDone()) {
+                    taskViewModel.isDoneChange(false, currenttask.getId());
+                } else {
+                    taskViewModel.isDoneChange(true, currenttask.getId());
+                }
+            }
+        });
     }
 
     public Task getTaskAt(int position) {

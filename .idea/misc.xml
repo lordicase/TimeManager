@@ -4,11 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable-v24/ic_lose.xml" value="0.284375" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable-v24/ic_save.xml" value="0.18645833333333334" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/button_bg.xml" value="0.22135416666666666" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/button_selector.xml" value="0.21770833333333334" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/dim.xml" value="0.284375" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/dot.xml" value="0.22135416666666666" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/gradient_background.xml" value="0.22135416666666666" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_circle.xml" value="0.16" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_done.xml" value="0.18645833333333334" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.18645833333333334" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18645833333333334" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_outline_pause.xml" value="0.221875" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_outline_play.xml" value="0.221875" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/drawable/ic_round_pause.xml" value="0.221875" />
@@ -23,6 +28,7 @@
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/activity_task.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/add_task_popup.xml" value="0.36666666666666664" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_add_project.xml" value="0.33" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_all_stat.xml" value="0.2546875" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_all_tasks.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_dashboard.xml" value="0.246875" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
@@ -30,6 +36,7 @@
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_project_stat.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_project_tasks.xml" value="0.2640625" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/fragment_projects.xml" value="0.2640625" />
+        <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/ic_circle.xml" value="0.20520833333333333" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_project.xml" value="0.67" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/item_task.xml" value="0.75" />
         <entry key="..\:/ANDROID/TimeManager/app/src/main/res/layout/select_color_popup.xml" value="0.36666666666666664" />

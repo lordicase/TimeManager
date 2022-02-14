@@ -49,6 +49,7 @@ public class ProjectTasksFragment extends Fragment {
     private EditText editTextTaskTitle;
     private ImageView imageView;
     private TextView textView;
+    private TaskAdapter taskAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,11 +65,11 @@ public class ProjectTasksFragment extends Fragment {
         height = LinearLayout.LayoutParams.WRAP_CONTENT;
         RecyclerView recycleView = (RecyclerView) root.findViewById(R.id.recyclerview);
         recycleView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        TaskAdapter taskAdapter = new TaskAdapter();
+        taskAdapter = new TaskAdapter();
         recycleView.setAdapter(taskAdapter);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+        taskViewModel.getAllProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 taskAdapter.submitList(tasks);
@@ -164,5 +165,22 @@ public class ProjectTasksFragment extends Fragment {
         binding = null;
     }
 
+    private void showNotDoneTask(){
+        taskViewModel.getNotDoneProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                taskAdapter.submitList(tasks);
+            }
+        });
+    }
+
+    private void showAllTask(){
+        taskViewModel.getAllProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                taskAdapter.submitList(tasks);
+            }
+        });
+    }
 
 }

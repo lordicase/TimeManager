@@ -17,4 +17,10 @@
         android:name="com.example.timemanager.ui.alltasks.AllTasksFragment"
         android:label="@string/title_all_tasks"
         tools:layout="@layout/fragment_all_tasks" />
+
+    <fragment
+        android:id="@+id/navigation_all_stat"
+        android:name="com.example.timemanager.ui.allstat.AllStatFragment"
+        android:label="@string/title_all_stat"
+        tools:layout="@layout/fragment_all_stat" />
 </navigation>
