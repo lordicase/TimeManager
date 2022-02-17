@@ -2,10 +2,13 @@ package com.example.timemanager.ui.projecttask;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,20 +43,22 @@ import java.util.List;
 public class ProjectTasksFragment extends Fragment {
 
     public static TaskViewModel taskViewModel;
-    private FragmentProjectTasksBinding binding;
+    FragmentProjectTasksBinding binding;
     View addTaskPopupView;
     int width;
     int height;
-    private int selectedTaskId;
+    private int selectedTaskId = -1;
     PopupWindow popupWindow;
-    private EditText editTextTaskTitle;
-    private ImageView imageView;
-    private TextView textView;
-    private TaskAdapter taskAdapter;
+    EditText editTextTaskTitle;
+    ImageView imageView;
+    TextView textView;
+    TaskAdapter taskAdapter;
+    public static SharedPreferences sharedPreferences;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        sharedPreferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         binding = FragmentProjectTasksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         addTaskPopupView = LayoutInflater.from(getActivity()).inflate(R.layout.add_task_popup, null);
@@ -69,12 +74,11 @@ public class ProjectTasksFragment extends Fragment {
         recycleView.setAdapter(taskAdapter);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getAllProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                taskAdapter.submitList(tasks);
-            }
-        });
+        if (sharedPreferences.getBoolean("showAllProjects", false) == true) {
+            showAllTask();
+        } else {
+            showNotDoneTask();
+        }
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -92,9 +96,10 @@ public class ProjectTasksFragment extends Fragment {
         taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task task, View view) {
-                showPopup(view);
                 editTextTaskTitle.setText(task.getTitle());
                 selectedTaskId = task.getId();
+                showPopup(view);
+
             }
         });
 
@@ -115,10 +120,11 @@ public class ProjectTasksFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please insert task title", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Task task = new Task(editText.getText().toString(), MainActivity2.getId(), false, MainActivity2.getProjectTitle(),MainActivity2.getColor());
-                if(task.getId()==0){
+                Task task = new Task(editText.getText().toString(), MainActivity2.getId(), false, MainActivity2.getProjectTitle(), MainActivity2.getColor());
+                if (selectedTaskId == -1) {
                     taskViewModel.insert(task);
-                }else{
+                } else {
+                    task.setId(selectedTaskId);
                     taskViewModel.update(task);
                 }
                 popupWindow.dismiss();
@@ -128,7 +134,7 @@ public class ProjectTasksFragment extends Fragment {
         return root;
     }
 
-    private void showPopup(View view){
+    private void showPopup(View view) {
         imageView.setColorFilter(Color.parseColor(AddEditProjectFragment.color));
         textView.setText(AddEditProjectFragment.title);
         popupWindow = new PopupWindow(addTaskPopupView, width, height, true);
@@ -148,12 +154,43 @@ public class ProjectTasksFragment extends Fragment {
         startActivity(new Intent(getActivity(), MainActivity.class));
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.projects_opttion_menu, menu);
+        menu.findItem(R.id.show_all).setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
+            menu.findItem(R.id.show_done).setTitle("Show only not done task");
+        } else {
+            menu.findItem(R.id.show_done).setTitle("Show all");
+        }
+
+        super.onPrepareOptionsMenu(menu);
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_project:
                 saveProject();
+
+            case R.id.show_done:
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
+                    showNotDoneTask();
+                    editor.putBoolean("showDoneTask", false);
+                    Toast.makeText(getActivity(), "Only not done task", Toast.LENGTH_SHORT).show();
+                } else {
+                    showAllTask();
+                    editor.putBoolean("showDoneTask", true);
+                    Toast.makeText(getActivity(), "All task", Toast.LENGTH_SHORT).show();
+                }
+                editor.apply();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -165,7 +202,7 @@ public class ProjectTasksFragment extends Fragment {
         binding = null;
     }
 
-    private void showNotDoneTask(){
+    private void showNotDoneTask() {
         taskViewModel.getNotDoneProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
@@ -174,7 +211,7 @@ public class ProjectTasksFragment extends Fragment {
         });
     }
 
-    private void showAllTask(){
+    private void showAllTask() {
         taskViewModel.getAllProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
@@ -182,5 +219,4 @@ public class ProjectTasksFragment extends Fragment {
             }
         });
     }
-
 }

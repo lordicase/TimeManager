@@ -170,7 +170,6 @@ public class ProjectsFragment extends Fragment {
                 editor.apply();
 
                 return true;
-            case R.id.show_done:
 
             default:
                 return super.onOptionsItemSelected(item);
