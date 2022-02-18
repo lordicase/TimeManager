@@ -107,7 +107,7 @@ public class ProjectTasksFragment extends Fragment {
         root.findViewById(R.id.add_task2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedTaskId = 0;
+                selectedTaskId = -1;
                 showPopup(view);
             }
         });
