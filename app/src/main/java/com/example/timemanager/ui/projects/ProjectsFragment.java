@@ -117,6 +117,7 @@ public class ProjectsFragment extends Fragment {
                 intent.putExtra(MainActivity2.EXTRA_ID, project.getId());
                 intent.putExtra(MainActivity2.EXTRA_TITLE, project.getTitle());
                 intent.putExtra(MainActivity2.EXTRA_COLOR, project.getColor());
+                intent.putExtra(MainActivity2.EXTRA_TIME_DONE, project.getTimeDone());
                 intent.putExtra(MainActivity2.EXTRA_TIME, project.getTime());
                 intent.putExtra(MainActivity2.EXTRA_DAYS, project.getDays());
                 startActivity(intent);

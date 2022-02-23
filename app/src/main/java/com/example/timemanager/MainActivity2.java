@@ -24,12 +24,13 @@ public class MainActivity2 extends AppCompatActivity {
     public static final String EXTRA_TITLE = "com.example.timemanager.EXTRA_TITLE";
     public static final String EXTRA_COLOR = "com.example.timemanager.EXTRA_COLOR";
     public static final String EXTRA_TIME = "com.example.timemanager.EXTRA_TIME";
+    public static final String EXTRA_TIME_DONE = "com.example.timemanager.EXTRA_TIME_DONE";
     public static final String EXTRA_DAYS = "com.example.timemanager.EXTRA_DAYS";
     public static final String EXTRA_ID = "com.example.timemanager.EXTRA_ID";
     private static int id = -1;
     private static String color = "#F44336";
     private static String projectTitle, days;
-    private static int hour, minutes;
+    private static int hour, minutes,timeDone;
     private ActivityMain2Binding binding;
 
     public static String getDays() { return days; }
@@ -50,6 +51,10 @@ public class MainActivity2 extends AppCompatActivity {
         return minutes;
     }
 
+    public static int getTimeDone() {
+        return timeDone;
+    }
+
     public static int getId() {
         return id;
     }
@@ -66,6 +71,7 @@ public class MainActivity2 extends AppCompatActivity {
             projectTitle = intent.getStringExtra(EXTRA_TITLE);
             days = intent.getStringExtra(EXTRA_DAYS);
             hour = intent.getIntExtra(EXTRA_TIME, 0) / 3600000;
+            timeDone = intent.getIntExtra(EXTRA_TIME_DONE,0);
             minutes = (intent.getIntExtra(EXTRA_TIME, 0) % 3600000) / 60000;
 
             GradientDrawable gd = new GradientDrawable(

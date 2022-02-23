@@ -279,6 +279,7 @@ public class AddEditProjectFragment extends Fragment implements View.OnClickList
         project.setDays(newDays);
         if (id != -1) {
             project.setId(id);
+            project.setTimeDone(MainActivity2.getTimeDone());
             projectViewModel.update(project);
             taskViewModel.updateTaskProjectTitle(MainActivity2.getId(),title,color);
         } else {
