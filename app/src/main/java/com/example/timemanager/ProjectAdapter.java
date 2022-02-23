@@ -84,9 +84,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
 
         } else {
-
-            holder.timeTextView.setText((currentproject.getTimeDone() / 3600000) + " : " + ((currentproject.getTimeDone() % 3600000) / 60000) + " : " + ((currentproject.getTimeDone() % 60000) / 1000) + " / " +
-                    (currentproject.getTime() / 3600000) + " : " + ((currentproject.getTime() % 3600000) / 60000) + " : " + ((currentproject.getTime() % 60000) / 1000));
+            holder.timeTextView.setText(getTime(currentproject.getTimeDone()) + " : " + getTime(currentproject.getTime()));
 
             holder.imageButton.setEnabled(true);
             if (holder.getAdapterPosition() == startedPosition) {
@@ -117,8 +115,8 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
 
 
                 } else {
-                    long startTime =  new Date().getTime();
-                    projectSessionViewModel.insert(new ProjectSession(currentproject.getId(), currentproject.getTitle(),startTime));
+                    long startTime = new Date().getTime();
+                    projectSessionViewModel.insert(new ProjectSession(currentproject.getId(), currentproject.getTitle(), startTime));
                     notifyItemChanged(startedPosition);
                     startedPosition = holder.getAdapterPosition();
 
@@ -132,7 +130,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
                             .putString("title", currentproject.getTitle())
                             .putString("color", currentproject.getColor())
                             .putString("days", currentproject.getDays())
-                            .putLong("sessionStartTime",startTime)
+                            .putLong("sessionStartTime", startTime)
                             .putInt("startedPosition", startedPosition)
                             .putInt("startedWorker", startedWorker)
                             .build();
@@ -156,6 +154,21 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
             }
         });
 
+    }
+
+    private String getTime(int time) {
+        time /= 1000;
+        String timeS;
+        if (time > 86400) {
+            timeS = time / 86400 + "d " + time % 86400 / 3600 + "h";
+        } else if (time > 3600) {
+            timeS = time / 3600 + "h " + time % 3600 / 60 + "min";
+        } else if (time > 60) {
+            timeS = time / 60 + "min " + time % 60 + "s";
+        } else {
+            timeS = time % 60 + "s";
+        }
+        return timeS;
     }
 
     public Project getProjectAt(int position) {
