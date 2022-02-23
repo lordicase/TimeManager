@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         return startedWorker;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
 
         Calendar resetTime = Calendar.getInstance();
-        resetTime.set(Calendar.HOUR_OF_DAY, 0);
-        resetTime.set(Calendar.MINUTE, 0);
+        resetTime.set(Calendar.HOUR_OF_DAY,23);
+        resetTime.set(Calendar.MINUTE, 59);
         resetTime.set(Calendar.SECOND, 0);
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, resetTime.getTimeInMillis(),pendingIntent);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, resetTime.getTimeInMillis(),pendingIntent);
 
     }
 
