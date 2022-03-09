@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
         return startedWorker;
     }
 
+    public static void setStartedPosition(int startedPosition) {
+        MainActivity.startedPosition = startedPosition;
+    }
+
+    public static void setStartedWorker(int startedWorker) {
+        MainActivity.startedWorker = startedWorker;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

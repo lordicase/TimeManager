@@ -20,6 +20,6 @@ public interface ProjectSessionDao {
     @Query("UPDATE projectSession_table SET endTime = :endTime WHERE projectId = :id AND startTime = :startTime")
     void updateEndTime(int id, long endTime, long startTime);
 
-    @Query("SELECT * FROM projectSession_table ORDER BY projectId DESC, startTime DESC")
+    @Query("SELECT * FROM projectSession_table WHERE endTime != 0 ORDER BY projectId DESC, startTime DESC ")
     LiveData<List<ProjectSession>> getAllProjectsSession();
 }

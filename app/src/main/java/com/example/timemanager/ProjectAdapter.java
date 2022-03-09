@@ -148,7 +148,8 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
                         .enqueueUniqueWork(String.valueOf(startedWorker), ExistingWorkPolicy.REPLACE, uploadWorkRequest);
 
             }
-
+            MainActivity.setStartedPosition(startedPosition);
+            MainActivity.setStartedWorker(startedWorker);
         });
 
     }
@@ -156,11 +157,11 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
     private String getTime(int time) {
         time /= 1000;
         String timeS;
-        if (time > 86400) {
+        if (time >= 86400) {
             timeS = time / 86400 + "d " + time % 86400 / 3600 + "h";
-        } else if (time > 3600) {
+        } else if (time >= 3600) {
             timeS = time / 3600 + "h " + time % 3600 / 60 + "min";
-        } else if (time > 60) {
+        } else if (time >= 60) {
             timeS = time / 60 + "min " + time % 60 + "s";
         } else {
             timeS = time % 60 + "s";
