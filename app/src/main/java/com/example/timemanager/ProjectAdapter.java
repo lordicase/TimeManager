@@ -1,5 +1,6 @@
 package com.example.timemanager;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -22,13 +23,11 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-import com.example.timemanager.dao.ProjectSessionDao;
 import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.ProjectSession;
 import com.example.timemanager.ui.projects.ProjectsFragment;
 import com.example.timemanager.viewmodel.ProjectSessionViewModel;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHolder> {
@@ -69,6 +68,7 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -102,56 +102,53 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
         GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
         drawable.setColor(Color.parseColor(currentproject.getColor()));
 
-        holder.imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WorkManager.getInstance(view.getContext()).cancelUniqueWork(String.valueOf(startedWorker));
+        holder.imageButton.setOnClickListener(view -> {
+            WorkManager.getInstance(view.getContext()).cancelUniqueWork(String.valueOf(startedWorker));
 
-                if (holder.getAdapterPosition() == startedPosition) {
-                    startedPosition = -1;
-                    startedWorker++;
-                    holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
-                    notifyItemChanged(holder.getAdapterPosition());
+            if (holder.getAdapterPosition() == startedPosition) {
+                startedPosition = -1;
+                startedWorker++;
+                holder.imageButton.setImageResource(R.drawable.ic_round_play_arrow);
+                notifyItemChanged(holder.getAdapterPosition());
 
 
-                } else {
-                    long startTime = new Date().getTime();
-                    projectSessionViewModel.insert(new ProjectSession(currentproject.getId(), currentproject.getTitle(), startTime));
-                    notifyItemChanged(startedPosition);
-                    startedPosition = holder.getAdapterPosition();
+            } else {
+                long startTime = new Date().getTime();
+                projectSessionViewModel.insert(new ProjectSession(currentproject.getId(), currentproject.getTitle(), startTime));
+                notifyItemChanged(startedPosition);
+                startedPosition = holder.getAdapterPosition();
 
-                    Toast.makeText(view.getContext(), "Starting " + currentproject.getTitle(), Toast.LENGTH_SHORT).show();
-                    holder.imageButton.setImageResource(R.drawable.ic_round_pause);
-                    startedWorker++;
-                    Data projectData = new Data.Builder()
-                            .putInt("id", currentproject.getId())
-                            .putInt("time", currentproject.getTime())
-                            .putInt("timeDone", currentproject.getTimeDone())
-                            .putString("title", currentproject.getTitle())
-                            .putString("color", currentproject.getColor())
-                            .putString("days", currentproject.getDays())
-                            .putLong("sessionStartTime", startTime)
-                            .putInt("startedPosition", startedPosition)
-                            .putInt("startedWorker", startedWorker)
-                            .build();
+                Toast.makeText(view.getContext(), "Starting " + currentproject.getTitle(), Toast.LENGTH_SHORT).show();
+                holder.imageButton.setImageResource(R.drawable.ic_round_pause);
+                startedWorker++;
+                Data projectData = new Data.Builder()
+                        .putInt("id", currentproject.getId())
+                        .putInt("time", currentproject.getTime())
+                        .putInt("timeDone", currentproject.getTimeDone())
+                        .putString("title", currentproject.getTitle())
+                        .putString("color", currentproject.getColor())
+                        .putString("days", currentproject.getDays())
+                        .putLong("sessionStartTime", startTime)
+                        .putInt("startedPosition", startedPosition)
+                        .putInt("startedWorker", startedWorker)
+                        .build();
 
 
-                    OneTimeWorkRequest uploadWorkRequest =
-                            new OneTimeWorkRequest.Builder(CountdownWorker.class)
-                                    .setConstraints(new Constraints.Builder()
+                OneTimeWorkRequest uploadWorkRequest =
+                        new OneTimeWorkRequest.Builder(CountdownWorker.class)
+                                .setConstraints(new Constraints.Builder()
 
-                                            .build())
-                                    .setInputData(projectData)
-                                    .addTag(String.valueOf(startedWorker))
-                                    .build();
+                                        .build())
+                                .setInputData(projectData)
+                                .addTag(String.valueOf(startedWorker))
+                                .build();
 
-                    WorkManager
-                            .getInstance(view.getContext())
-                            .enqueueUniqueWork(String.valueOf(startedWorker), ExistingWorkPolicy.REPLACE, uploadWorkRequest);
-
-                }
+                WorkManager
+                        .getInstance(view.getContext())
+                        .enqueueUniqueWork(String.valueOf(startedWorker), ExistingWorkPolicy.REPLACE, uploadWorkRequest);
 
             }
+
         });
 
     }
@@ -192,13 +189,10 @@ public class ProjectAdapter extends ListAdapter<Project, ProjectAdapter.ViewHold
             imageButton = itemView.findViewById(R.id.imageButton);
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    if (listener != null && position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(getItem(position));
-                    }
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(getItem(position));
                 }
             });
         }

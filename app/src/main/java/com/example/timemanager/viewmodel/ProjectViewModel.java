@@ -15,17 +15,38 @@ public class ProjectViewModel extends AndroidViewModel {
     private ProjectRepository repository;
     private LiveData<List<Project>> allProject;
 
-    public ProjectViewModel(@NonNull Application application){
+    public ProjectViewModel(@NonNull Application application) {
         super(application);
         repository = new ProjectRepository(application);
         allProject = repository.getAllProject();
 
     }
 
-    public void insert(Project project){repository.insert(project);}
-    public void update(Project project){repository.update(project);}
-    public void delete(Project project){repository.delete(project);}
-    public void resetTimeDone(){repository.resetTimeDone();}
-    public LiveData<List<Project>> getAllProject(){return allProject;}
-    public LiveData<List<Project>> getDayProject(String day){return repository.getDayProject(day);}
+    public void insert(Project project) {
+        repository.insert(project);
+    }
+
+    public void update(Project project) {
+        repository.update(project);
+    }
+
+    public void delete(Project project) {
+        repository.delete(project);
+    }
+
+    public void resetTimeDone() {
+        repository.resetTimeDone();
+    }
+
+    public void setTimeDone(int timeDone, int id) {
+        repository.setTimeDone(timeDone, id);
+    }
+
+    public LiveData<List<Project>> getAllProject() {
+        return allProject;
+    }
+
+    public LiveData<List<Project>> getDayProject(String day) {
+        return repository.getDayProject(day);
+    }
 }

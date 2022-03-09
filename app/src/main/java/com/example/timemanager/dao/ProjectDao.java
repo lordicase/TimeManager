@@ -33,4 +33,6 @@ public interface ProjectDao {
     @Query("UPDATE project_table set timeDone = 0")
     void resetTimeDone();
 
+    @Query("UPDATE project_table SET timeDone = :timeDone WHERE id = :id")
+    void setTimeDone(int timeDone, int id);
 }

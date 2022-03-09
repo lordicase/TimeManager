@@ -39,7 +39,7 @@ public interface TaskDao {
     @Query("DELETE FROM task_table WHERE projectTitle = :projectTitle")
     void deleteProjectTasks(String projectTitle);
 
-    @Query("UPDATE task_table SET projectTitle = :newProjectTitle, color = :color WHERE projectTitle = :projectId")
+    @Query("UPDATE task_table SET projectTitle = :newProjectTitle, color = :color WHERE projectId = :projectId")
     void updateTaskProjectTitle(int projectId, String newProjectTitle, String color);
 
     @Query("UPDATE task_table SET done = :done WHERE id = :id")

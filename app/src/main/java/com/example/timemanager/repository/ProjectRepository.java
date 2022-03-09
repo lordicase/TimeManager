@@ -62,6 +62,15 @@ public class ProjectRepository {
         });
     }
 
+    public void setTimeDone(int timeDone, int id) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                projectDao.setTimeDone(timeDone, id);
+            }
+        });
+    }
+
 
     public LiveData<List<Project>> getAllProject() {
         return allProject;

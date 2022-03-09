@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
 
         Calendar resetTime = Calendar.getInstance();
-        resetTime.set(Calendar.HOUR_OF_DAY,23);
-        resetTime.set(Calendar.MINUTE, 59);
+        resetTime.set(Calendar.HOUR_OF_DAY,0);
+        resetTime.set(Calendar.MINUTE, 0);
         resetTime.set(Calendar.SECOND, 0);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, resetTime.getTimeInMillis(),pendingIntent);

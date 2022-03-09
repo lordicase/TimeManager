@@ -21,8 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.timemanager.MainActivity;
-import com.example.timemanager.MainActivity2;
+
 import com.example.timemanager.R;
 import com.example.timemanager.TaskAdapter;
 import com.example.timemanager.databinding.FragmentAllTasksBinding;
