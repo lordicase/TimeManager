@@ -22,6 +22,6 @@ public class ProjectSessionViewModel extends AndroidViewModel {
 
     public void insert(ProjectSession projectSession){projectSessionRepository.insert(projectSession);}
     public void updateEndTime(int id, long endTime, long startTime ){projectSessionRepository.updateEndTime( id,  endTime, startTime);}
-    public LiveData<List<ProjectSession>> getAllProjectSession(){return projectSessionRepository.getAllProjectSession();}
+    public LiveData<List<ProjectSession>> getAllProjectSession(long startTime, long endTime){return projectSessionRepository.getAllProjectSession(startTime,endTime);}
 
 }

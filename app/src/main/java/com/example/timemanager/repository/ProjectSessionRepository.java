@@ -41,7 +41,7 @@ public class ProjectSessionRepository {
         });
     }
 
-    public LiveData<List<ProjectSession>> getAllProjectSession() {
-        return projectSessionDao.getAllProjectsSession();
+    public LiveData<List<ProjectSession>> getAllProjectSession(long startTime, long endTime) {
+        return projectSessionDao.getAllProjectsSession(startTime, endTime);
     }
 }
