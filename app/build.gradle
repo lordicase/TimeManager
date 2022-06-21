@@ -62,4 +62,9 @@ dependencies {
     implementation "androidx.work:work-runtime:$work_version"
     //CHARTS LIB
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //    retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+//    converters
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 }
