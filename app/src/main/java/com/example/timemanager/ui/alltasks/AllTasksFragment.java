@@ -2,13 +2,20 @@ package com.example.timemanager.ui.alltasks;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +29,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.timemanager.MainActivity2;
 import com.example.timemanager.R;
 import com.example.timemanager.TaskAdapter;
 import com.example.timemanager.databinding.FragmentAllTasksBinding;
+import com.example.timemanager.databinding.FragmentProjectTasksBinding;
 import com.example.timemanager.entity.Task;
+import com.example.timemanager.ui.addproject.AddEditProjectFragment;
 import com.example.timemanager.viewmodel.TaskViewModel;
 
 import java.util.List;
@@ -38,25 +48,40 @@ public class AllTasksFragment extends Fragment {
     public static SharedPreferences sharedPreferences;
     RecyclerView recycleView;
     TaskAdapter taskAdapter;
+    EditText editTextTaskTitle;
+    private int selectedTaskId = -1;
+
+
+    View addTaskPopupView;
+    int width;
+    int height;
+
+    PopupWindow popupWindow;
+
+    ImageView imageView;
+    TextView textView;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         binding = FragmentAllTasksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-         recycleView = (RecyclerView) root.findViewById(R.id.recyclerview);
+        recycleView = (RecyclerView) root.findViewById(R.id.recyclerview);
         recycleView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-         taskAdapter = new TaskAdapter();
+        taskAdapter = new TaskAdapter();
         recycleView.setAdapter(taskAdapter);
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        addTaskPopupView = LayoutInflater.from(getActivity()).inflate(R.layout.add_task_popup, null);
+        imageView = addTaskPopupView.findViewById(R.id.imageView);
+        textView = addTaskPopupView.findViewById(R.id.textView);
+        editTextTaskTitle = addTaskPopupView.findViewById(R.id.editText);
+        width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
         sharedPreferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
-            showAllTask();
-        } else {
-            showNotDoneTask();
-        }
-
+        showTask();
 
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -72,6 +97,43 @@ public class AllTasksFragment extends Fragment {
             }
         }).attachToRecyclerView(recycleView);
 
+        taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Task task, View view) {
+                editTextTaskTitle.setText(task.getTitle());
+                selectedTaskId = task.getId();
+                showPopup(view);
+
+            }
+        });
+
+
+        root.findViewById(R.id.add_task2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedTaskId = -1;
+                showPopup(view);
+            }
+        });
+
+        addTaskPopupView.findViewById(R.id.save_task).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText editText = addTaskPopupView.findViewById(R.id.editText);
+                if (editText.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(getActivity(), "Please insert task title", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Task task = new Task(editText.getText().toString(), -1, false, "No project", "#8f8f8f");
+                if (selectedTaskId == -1) {
+                    taskViewModel.insert(task);
+                } else {
+                    task.setId(selectedTaskId);
+                    taskViewModel.update(task);
+                }
+                popupWindow.dismiss();
+            }
+        });
         return root;
     }
 
@@ -85,7 +147,7 @@ public class AllTasksFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
+        if (sharedPreferences.getBoolean("showDoneTask", false)) {
             menu.findItem(R.id.show_done).setTitle("Show only not done task");
         } else {
             menu.findItem(R.id.show_done).setTitle("Show all");
@@ -100,16 +162,16 @@ public class AllTasksFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.show_done:
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
-                    showNotDoneTask();
+                if (sharedPreferences.getBoolean("showDoneTask", false)) {
                     editor.putBoolean("showDoneTask", false);
                     Toast.makeText(getActivity(), "Only not done task", Toast.LENGTH_SHORT).show();
                 } else {
-                    showAllTask();
                     editor.putBoolean("showDoneTask", true);
                     Toast.makeText(getActivity(), "All task", Toast.LENGTH_SHORT).show();
                 }
                 editor.apply();
+                showTask();
+
 
                 return true;
             default:
@@ -117,6 +179,20 @@ public class AllTasksFragment extends Fragment {
         }
     }
 
+    private void showPopup(View view) {
+        imageView.setColorFilter(Color.parseColor(AddEditProjectFragment.color));
+        textView.setText(AddEditProjectFragment.title);
+        popupWindow = new PopupWindow(addTaskPopupView, width, height, true);
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        View container = popupWindow.getContentView().getRootView();
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.5f;
+        wm.updateViewLayout(container, p);
+    }
 
     @Override
     public void onDestroyView() {
@@ -124,21 +200,14 @@ public class AllTasksFragment extends Fragment {
         binding = null;
     }
 
-    private void showNotDoneTask(){
-        taskViewModel.getNotDoneTasks().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                taskAdapter.submitList(tasks);
-            }
-        });
+    private void showTask() {
+        if (sharedPreferences.getBoolean("showDoneTask", false)) {
+            taskViewModel.getAllTask().observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+        } else {
+            taskViewModel.getNotDoneTasks().observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+        }
+
     }
 
-    private void showAllTask(){
-        taskViewModel.getAllTask().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                taskAdapter.submitList(tasks);
-            }
-        });
-    }
+
 }
