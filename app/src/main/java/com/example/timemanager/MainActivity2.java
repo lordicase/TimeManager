@@ -30,10 +30,12 @@ public class MainActivity2 extends AppCompatActivity {
     private static int id = -1;
     private static String color = "#F44336";
     private static String projectTitle, days;
-    private static int hour, minutes,timeDone;
+    private static int hour, minutes, timeDone;
     private ActivityMain2Binding binding;
 
-    public static String getDays() { return days; }
+    public static String getDays() {
+        return days;
+    }
 
     public static String getColor() {
         return color;
@@ -71,7 +73,7 @@ public class MainActivity2 extends AppCompatActivity {
             projectTitle = intent.getStringExtra(EXTRA_TITLE);
             days = intent.getStringExtra(EXTRA_DAYS);
             hour = intent.getIntExtra(EXTRA_TIME, 0) / 3600000;
-            timeDone = intent.getIntExtra(EXTRA_TIME_DONE,0);
+            timeDone = intent.getIntExtra(EXTRA_TIME_DONE, 0);
             minutes = (intent.getIntExtra(EXTRA_TIME, 0) % 3600000) / 60000;
 
             GradientDrawable gd = new GradientDrawable(
@@ -111,7 +113,7 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
-
+        MainActivity.setBackClick(true);
     }
 
     @Override

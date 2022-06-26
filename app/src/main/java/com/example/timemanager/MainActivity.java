@@ -31,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
     static int startedWorker = 0;
     private ActivityMainBinding binding;
     private AlarmManager alarmManager;
+    static boolean backClick=true;
+
+    public static void setBackClick(boolean backClick) {
+        MainActivity.backClick = backClick;
+    }
+
 
 
 
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         resetTime.set(Calendar.SECOND, 0);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, resetTime.getTimeInMillis(),pendingIntent);
-
+        backClick=true;
     }
 
 
@@ -101,8 +107,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    public void onBackPressed(){
+        if(backClick) {
+            backClick=false;
+            super.onBackPressed();
+            Toast.makeText(getApplicationContext(),"click again to exit",Toast.LENGTH_LONG).show();
+            return;
+        }
+        moveTaskToBack(false);
+        finish();
+    }
 
 
 }
