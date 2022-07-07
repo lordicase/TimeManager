@@ -30,12 +30,12 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
     private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
         @Override
         public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
-            return false;
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
-            return false;
+            return oldItem.isDone() == newItem.isDone();
         }
     };
 
@@ -50,24 +50,24 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Task currenttask = getItem(position);
-        if (currenttask.isDone()) {
+        Task currentTask = getItem(position);
+        if (currentTask.isDone()) {
             holder.imageButton.setImageResource(R.drawable.ic_done);
         } else {
             holder.imageButton.setImageResource(R.drawable.ic_circle);
         }
-        holder.titleTextView.setText(currenttask.getTitle());
-        holder.projectTitleTextView.setText(currenttask.getProjectTitle());
+        holder.titleTextView.setText(currentTask.getTitle());
+        holder.projectTitleTextView.setText(currentTask.getProjectTitle());
         GradientDrawable drawable = (GradientDrawable) holder.imageView.getBackground();
-        drawable.setColor(Color.parseColor(currenttask.getColor()));
+        drawable.setColor(Color.parseColor(currentTask.getColor()));
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currenttask.isDone()) {
-                    taskViewModel.isDoneChange(false, currenttask.getId());
+                if (currentTask.isDone()) {
+                    taskViewModel.isDoneChange(false, currentTask.getId());
                 } else {
-                    taskViewModel.isDoneChange(true, currenttask.getId());
+                    taskViewModel.isDoneChange(true, currentTask.getId());
                 }
             }
         });

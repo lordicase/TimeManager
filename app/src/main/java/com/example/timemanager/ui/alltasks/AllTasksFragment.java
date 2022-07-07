@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -50,6 +51,7 @@ public class AllTasksFragment extends Fragment {
     TaskAdapter taskAdapter;
     EditText editTextTaskTitle;
     private int selectedTaskId = -1;
+    LiveData<List<Task>> allTasks, notDoneTasks;
 
 
     View addTaskPopupView;
@@ -79,7 +81,6 @@ public class AllTasksFragment extends Fragment {
         editTextTaskTitle = addTaskPopupView.findViewById(R.id.editText);
         width = LinearLayout.LayoutParams.WRAP_CONTENT;
         height = LinearLayout.LayoutParams.WRAP_CONTENT;
-
         sharedPreferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         showTask();
 
@@ -112,6 +113,8 @@ public class AllTasksFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedTaskId = -1;
+                EditText editText = addTaskPopupView.findViewById(R.id.editText);
+                editText.setText("");
                 showPopup(view);
             }
         });
@@ -164,9 +167,11 @@ public class AllTasksFragment extends Fragment {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 if (sharedPreferences.getBoolean("showDoneTask", false)) {
                     editor.putBoolean("showDoneTask", false);
+                    allTasks.removeObservers(getViewLifecycleOwner());
                     Toast.makeText(getActivity(), "Only not done task", Toast.LENGTH_SHORT).show();
                 } else {
                     editor.putBoolean("showDoneTask", true);
+                    notDoneTasks.removeObservers(getViewLifecycleOwner());
                     Toast.makeText(getActivity(), "All task", Toast.LENGTH_SHORT).show();
                 }
                 editor.apply();
@@ -202,9 +207,12 @@ public class AllTasksFragment extends Fragment {
 
     private void showTask() {
         if (sharedPreferences.getBoolean("showDoneTask", false)) {
-            taskViewModel.getAllTask().observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+            allTasks = taskViewModel.getAllTask();
+            allTasks.observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+
         } else {
-            taskViewModel.getNotDoneTasks().observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+            notDoneTasks = taskViewModel.getNotDoneTasks();
+            notDoneTasks.observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
         }
 
     }

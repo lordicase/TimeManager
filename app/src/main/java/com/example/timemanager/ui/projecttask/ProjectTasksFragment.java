@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -53,6 +54,7 @@ public class ProjectTasksFragment extends Fragment {
     ImageView imageView;
     TextView textView;
     TaskAdapter taskAdapter;
+    LiveData<List<Task>> allTasks, notDoneTasks;
     public static SharedPreferences sharedPreferences;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -74,11 +76,7 @@ public class ProjectTasksFragment extends Fragment {
         recycleView.setAdapter(taskAdapter);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        if (sharedPreferences.getBoolean("showAllProjects", false) == true) {
-            showAllTask();
-        } else {
-            showNotDoneTask();
-        }
+       showTask();
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -108,6 +106,8 @@ public class ProjectTasksFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedTaskId = -1;
+                EditText editText = addTaskPopupView.findViewById(R.id.editText);
+                editText.setText("");
                 showPopup(view);
             }
         });
@@ -163,7 +163,7 @@ public class ProjectTasksFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
+        if (sharedPreferences.getBoolean("showDoneTask", false)) {
             menu.findItem(R.id.show_done).setTitle("Show only not done task");
         } else {
             menu.findItem(R.id.show_done).setTitle("Show all");
@@ -181,16 +181,17 @@ public class ProjectTasksFragment extends Fragment {
 
             case R.id.show_done:
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                if (sharedPreferences.getBoolean("showDoneTask", false) == true) {
-                    showNotDoneTask();
+                if (sharedPreferences.getBoolean("showDoneTask", false)) {
                     editor.putBoolean("showDoneTask", false);
+                    allTasks.removeObservers(getViewLifecycleOwner());
                     Toast.makeText(getActivity(), "Only not done task", Toast.LENGTH_SHORT).show();
                 } else {
-                    showAllTask();
                     editor.putBoolean("showDoneTask", true);
+                    notDoneTasks.removeObservers(getViewLifecycleOwner());
                     Toast.makeText(getActivity(), "All task", Toast.LENGTH_SHORT).show();
                 }
                 editor.apply();
+                showTask();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -202,6 +203,17 @@ public class ProjectTasksFragment extends Fragment {
         binding = null;
     }
 
+    private void showTask() {
+        if (sharedPreferences.getBoolean("showDoneTask", false)) {
+            allTasks = taskViewModel.getAllProjectTasks(String.valueOf(MainActivity2.getId()));
+            allTasks.observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+
+        } else {
+            notDoneTasks = taskViewModel.getNotDoneProjectTasks(String.valueOf(MainActivity2.getId()));
+            notDoneTasks.observe(getViewLifecycleOwner(), tasks -> taskAdapter.submitList(tasks));
+        }
+
+    }
     private void showNotDoneTask() {
         taskViewModel.getNotDoneProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
@@ -212,6 +224,7 @@ public class ProjectTasksFragment extends Fragment {
     }
 
     private void showAllTask() {
+
         taskViewModel.getAllProjectTasks(String.valueOf(MainActivity2.getId())).observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
