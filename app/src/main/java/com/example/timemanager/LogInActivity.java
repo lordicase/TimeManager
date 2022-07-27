@@ -2,7 +2,9 @@ package com.example.timemanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +29,8 @@ public class LogInActivity extends AppCompatActivity {
     CheckBox rememberBox;
     LogRegisApi logRegisApi;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +39,20 @@ public class LogInActivity extends AppCompatActivity {
         password = findViewById(R.id.editTextPassword);
         rememberBox = findViewById(R.id.checkBox);
         loginButton = findViewById(R.id.button5);
+        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+if(sharedPreferences.getBoolean("rememberMe",false)){
+rememberBox.setChecked(true);
+login.setText(sharedPreferences.getString("login",""));
+password.setText(sharedPreferences.getString("password",""));
 
+}
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.server_address)+"timemanagerAPI/LogRegis/")
+                .baseUrl(getString(R.string.server_address) + "LogRegis/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -62,9 +73,15 @@ public class LogInActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), response.body(), Toast.LENGTH_SHORT).show();
                             return;
                         }
-
+                        if(rememberBox.isChecked()){
+                            editor.putBoolean("rememberMe",true);
+                        }
+                        editor.putString("login", login.getText().toString());
+                        editor.putString("password", password.getText().toString());
+                        editor.putInt("id", Integer.parseInt(response.body()));
+                        editor.apply();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                      //  finish();
+
                     }
 
                     @Override
