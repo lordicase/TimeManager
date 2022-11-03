@@ -16,7 +16,7 @@ import com.example.timemanager.entity.Project;
 import com.example.timemanager.entity.ProjectSession;
 import com.example.timemanager.entity.Task;
 
-@Database(entities = {Project.class, Task.class, ProjectSession.class}, version = 16)
+@Database(entities = {Project.class, Task.class, ProjectSession.class}, version = 19)
 public abstract class DataBase extends RoomDatabase {
     private static DataBase instance;
     public abstract ProjectDao projectDao();
@@ -50,9 +50,9 @@ public abstract class DataBase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            projectDao.insert(new Project("Work", 28800000, "#E91E63"));
-            projectDao.insert(new Project("Fun", 3600000, "#CDDC39"));
-            projectDao.insert(new Project("Lerning",7200000 , "#009688"));
+            projectDao.insert(new Project("Work", 28800000, "#E91E63", "MONTUEWEDTHUFRISATSUN"));
+            projectDao.insert(new Project("Fun", 3600000, "#CDDC39", "MONTUEWEDTHUFRISATSUN"));
+            projectDao.insert(new Project("Learning",7200000 , "#009688", "MONTUEWEDTHUFRISATSUN"));
             return null;
         }
     }

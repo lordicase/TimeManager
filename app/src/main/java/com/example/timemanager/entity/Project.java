@@ -2,6 +2,7 @@ package com.example.timemanager.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -27,6 +28,13 @@ public class Project {
         this.title = title;
         this.time = time;
         this.color = color;
+    }
+    @Ignore
+    public Project (String title, int time, String color, String days){
+        this.title = title;
+        this.time = time;
+        this.color = color;
+        this.days = days;
     }
 
     public void setId(int id) {
