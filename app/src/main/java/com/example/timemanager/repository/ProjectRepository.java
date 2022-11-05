@@ -3,7 +3,6 @@ package com.example.timemanager.repository;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -44,7 +43,7 @@ public class ProjectRepository {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(application.getString(R.string.server_address)+"timemanagerAPI/Project/")
+                .baseUrl(application.getString(R.string.server_address) + "Project/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -56,27 +55,13 @@ public class ProjectRepository {
             @Override
             public void run() {
                 projectDao.insert(project);
+                int projectId = projectDao.getProjectId(project.getTitle(), project.getTime(), project.getTimeDone(), project.getColor(), project.getDays());
+                project.setId(projectId);
+                insertProjectOnServer(project);
             }
         });
 
-        Call<String> call = projectApi.insertProject(sharedPreferences.getInt("id",-1), sharedPreferences.getString("login",""), sharedPreferences.getString("password",""), project.getTitle(), project.getTime(), project.getTimeDone(), project.getColor(), project.getDays());
 
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (!response.isSuccessful()) {
-
-                    return;
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-
-            }
-        });
     }
 
     public void update(Project project) {
@@ -84,6 +69,7 @@ public class ProjectRepository {
             @Override
             public void run() {
                 projectDao.update(project);
+                updateProjectOnServer(project);
             }
         });
     }
@@ -93,8 +79,11 @@ public class ProjectRepository {
             @Override
             public void run() {
                 projectDao.delete(project);
+                deleteProjectFromServer(project.getId());
             }
         });
+
+
     }
 
     public void resetTimeDone() {
@@ -124,8 +113,8 @@ public class ProjectRepository {
         return projectDao.getDayProjects(day);
     }
 
-    public List<Project> getProject() {
-        Call<List<Project>> call = projectApi.getProjects(sharedPreferences.getInt("id",-1), sharedPreferences.getString("login",""), sharedPreferences.getString("password",""));
+    public List<Project> getProjectFromServer() {
+        Call<List<Project>> call = projectApi.getProjects(sharedPreferences.getInt("id", -1), sharedPreferences.getString("login", ""), sharedPreferences.getString("password", ""));
 
         call.enqueue(new Callback<List<Project>>() {
             @Override
@@ -140,5 +129,59 @@ public class ProjectRepository {
         });
 
         return projects;
+    }
+
+    public void insertProjectOnServer(Project project) {
+
+        Call<String> call = projectApi.insertProject(project.getId(), sharedPreferences.getInt("id", -1), sharedPreferences.getString("login", ""), sharedPreferences.getString("password", ""), project.getTitle(), project.getTime(), project.getTimeDone(), project.getColor(), project.getDays());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (!response.isSuccessful()) {
+
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+    public void updateProjectOnServer(Project project) {
+        Call<String> call = projectApi.updateProject(project.getId(), sharedPreferences.getInt("id", -1), sharedPreferences.getString("login", ""), sharedPreferences.getString("password", ""), project.getTitle(), project.getTime(), project.getTimeDone(), project.getColor(), project.getDays());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (!response.isSuccessful()) {
+
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void deleteProjectFromServer(int projectId) {
+        Call<String> call = projectApi.deleteProject(sharedPreferences.getInt("id", -1), sharedPreferences.getString("login", ""), sharedPreferences.getString("password", ""), projectId);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (!response.isSuccessful()) {
+
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
     }
 }

@@ -19,8 +19,8 @@ public interface LogRegisApi {
             @Field("login") String login,
             @Field("password") String password
     );
-
-    @GET("register.php")
+    @FormUrlEncoded
+    @POST("register.php")
     Call<String> register(
             @Field("login") String login,
             @Field("password") String password

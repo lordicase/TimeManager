@@ -1,9 +1,10 @@
 package com.example.timemanager.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "projectSession_table")
+@Entity(tableName = "projectSession_table", indices = @Index(value = {"projectId","projectTitle","startTime","endTime"}))
 public class ProjectSession {
 
     @PrimaryKey(autoGenerate = true)

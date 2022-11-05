@@ -127,7 +127,7 @@ public class AllTasksFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please insert task title", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Task task = new Task(editText.getText().toString(), -1, false, "No project", "#8f8f8f");
+                Task task = new Task(editText.getText().toString(), 0, false, "No project", "#8f8f8f");
                 if (selectedTaskId == -1) {
                     taskViewModel.insert(task);
                 } else {

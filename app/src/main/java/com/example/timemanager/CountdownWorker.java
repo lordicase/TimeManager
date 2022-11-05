@@ -71,7 +71,7 @@ public class CountdownWorker extends Worker {
 
     private void startCountdown() {
         int count = (project.getTime() - project.getTimeDone()) / 1000;
-        for (int i = 0; i <= count; i++) {
+        for (int i = 0; i < count; i++) {
 
             if (!isStopped()) {
 
@@ -79,7 +79,7 @@ public class CountdownWorker extends Worker {
                     project.setTimeDone(project.getTimeDone() + 1000);
                     projectViewModel.setTimeDone(project.getTimeDone(), project.getId());
 
-                        progress = getTime(project.getTimeDone()) + " : " + getTime(project.getTime());
+                    progress = getTime(project.getTimeDone()) + " : " + getTime(project.getTime());
 
                     setForegroundAsync(createForegroundInfo(progress));
                     Thread.sleep(1000);
@@ -89,7 +89,7 @@ public class CountdownWorker extends Worker {
 
             }
         }
-
+        onStopped();
     }
 
     @NonNull
@@ -97,7 +97,6 @@ public class CountdownWorker extends Worker {
         // Build a notification using bytesRead and contentLength
 
         Context context = getApplicationContext();
-
 
 
         // This PendingIntent can be used to cancel the worker
@@ -144,8 +143,9 @@ public class CountdownWorker extends Worker {
 
     @Override
     public void onStopped() {
-
-        projectSessionViewModel.updateEndTime(inputData.getInt("id", -1),new Date().getTime(),inputData.getLong("sessionStartTime",-1));
+        ProjectSession projectSession = new ProjectSession(project.getId(), project.getTitle(), inputData.getLong("sessionStartTime", -1));
+        projectSession.setEndTime(new Date().getTime());
+        projectSessionViewModel.updateEndTime(projectSession);
         super.onStopped();
     }
 

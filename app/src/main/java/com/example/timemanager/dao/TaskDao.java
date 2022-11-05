@@ -36,6 +36,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task_table WHERE projectId like :project AND done = 0")
     LiveData<List<Task>> getNotDoneProjectTasks(String project);
 
+    @Query("SELECT id FROM task_table WHERE title=:title AND projectId=:projectId AND projectTitle=:projectTitle AND color=:color AND done=:done" )
+    int getProjectId(String title,int projectId, String  projectTitle, String color, Boolean done);
+
     @Query("DELETE FROM task_table WHERE projectTitle = :projectTitle")
     void deleteProjectTasks(String projectTitle);
 

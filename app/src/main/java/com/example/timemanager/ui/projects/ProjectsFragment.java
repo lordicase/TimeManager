@@ -44,16 +44,18 @@ public class ProjectsFragment extends Fragment {
     static TaskViewModel taskViewModel;
 
 
-
     static ProjectSessionViewModel projectSessionViewModel;
     public static SharedPreferences sharedPreferences;
     ProjectAdapter projectAdapter;
+
     public static ProjectViewModel getProjectViewModel() {
         return projectViewModel;
     }
+
     public static TaskViewModel getTaskViewModel() {
         return taskViewModel;
     }
+
     public static ProjectSessionViewModel getProjectSessionViewModel() {
         return projectSessionViewModel;
     }
@@ -74,14 +76,13 @@ public class ProjectsFragment extends Fragment {
 
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        projectSessionViewModel = new  ViewModelProvider(this).get(ProjectSessionViewModel.class);
-
+        projectSessionViewModel = new ViewModelProvider(this).get(ProjectSessionViewModel.class);
 
 
         if (sharedPreferences.getBoolean("showAllProjects", false) == true) {
-         showAllProject();
+            showAllProject();
         } else {
-  showDayProject();
+            showDayProject();
         }
 
 
@@ -126,16 +127,14 @@ public class ProjectsFragment extends Fragment {
         });
 
 
-
-
         return root;
     }
-
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.projects_opttion_menu, menu);
+        menu.findItem(R.id.show_done).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -182,14 +181,10 @@ public class ProjectsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
     private void showAllProject() {
-       projectViewModel.getAllProject().observe(getViewLifecycleOwner(), new Observer<List<Project>>() {
-           @Override
-           public void onChanged(List<Project> projects) {
-               projectAdapter.submitList(projects);
-           }
-       });
-   }
+        projectViewModel.getAllProject().observe(getViewLifecycleOwner(), projects -> projectAdapter.submitList(projects));
+    }
 
     private void showDayProject() {
         projectViewModel.getDayProject("%" + new SimpleDateFormat("EEE", Locale.ENGLISH).format(new Date()) + "%").observe(getViewLifecycleOwner(), new Observer<List<Project>>() {
